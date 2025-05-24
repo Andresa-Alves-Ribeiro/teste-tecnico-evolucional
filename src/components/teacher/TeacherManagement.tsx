@@ -19,10 +19,10 @@ import {
     DialogActions,
     Typography,
 } from '@mui/material';
-import { Relationship } from '../types';
-import { teachers, degrees, classes, relationships, students } from '../data/mockData';
+import { Relationship } from '../../types';
+import { teachers, degrees, classes, relationships, students } from '../../data/mockData';
 
-const TeacherManagement: React.FC = () => {
+const TeacherManagement = () => {
     const [filteredRelationships, setFilteredRelationships] = useState<Relationship[]>(relationships);
     const [selectedDegree, setSelectedDegree] = useState<number | ''>('');
     const [selectedClass, setSelectedClass] = useState<number | ''>('');

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import StudentManagement from './components/StudentManagement';
-import TeacherManagement from './components/TeacherManagement';
-import Layout from './components/Layout';
+import StudentManagement from './components/student/StudentManagement';
+import TeacherManagement from './components/teacher/TeacherManagement';
+import Layout from './components/layout/Layout';
 
 function App() {
   return (
