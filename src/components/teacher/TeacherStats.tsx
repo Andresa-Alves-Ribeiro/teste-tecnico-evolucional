@@ -4,25 +4,27 @@ import PeopleIcon from '@mui/icons-material/People';
 import ClassIcon from '@mui/icons-material/Class';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SchoolIcon from '@mui/icons-material/School';
-import StatsCards from '../../common/StatsCards';
+import StatsCards from '../common/StatsCards';
 
-interface StudentStatsProps {
-  totalStudents: number;
+interface TeacherStatsProps {
+  totalTeachers: number;
   totalDegrees: number;
   totalClasses: number;
+  totalRelationships: number;
 }
 
-const StudentStats = ({
-  totalStudents,
+const TeacherStats = ({
+  totalTeachers,
   totalDegrees,
   totalClasses,
-}: StudentStatsProps) => {
+  totalRelationships,
+}: TeacherStatsProps) => {
   const theme = useTheme();
 
   const stats = [
     {
-      title: 'Total de Alunos',
-      value: totalStudents,
+      title: 'Total de Professores',
+      value: totalTeachers,
       icon: PeopleIcon,
       color: theme.palette.primary.main,
     },
@@ -39,8 +41,8 @@ const StudentStats = ({
       color: theme.palette.info.main,
     },
     {
-      title: 'Média por Turma',
-      value: Math.round(totalStudents / totalClasses),
+      title: 'Relações Ativas',
+      value: totalRelationships,
       icon: SchoolIcon,
       color: theme.palette.warning.main,
     },
@@ -49,4 +51,4 @@ const StudentStats = ({
   return <StatsCards stats={stats} />;
 };
 
-export default StudentStats; 
+export default TeacherStats; 

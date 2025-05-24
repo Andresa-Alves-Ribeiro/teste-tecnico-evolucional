@@ -1,28 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-    Box,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Typography,
-} from '@mui/material';
-import { Relationship } from '../../types';
+import { Box, Container, Paper, useTheme, alpha } from '@mui/material';
+import { Relationship, TableItem } from '../../types';
 import { teachers, degrees, classes, relationships, students } from '../../data/mockData';
+import TeacherFilters from './TeacherFilters';
+import DataTable from '../common/DataTable';
+import AddRelationshipDialog from './AddRelationshipDialog';
+import TeacherHeader from './TeacherHeader';
+import TeacherStats from './TeacherStats';
 
 const TeacherManagement = () => {
+    const theme = useTheme();
     const [filteredRelationships, setFilteredRelationships] = useState<Relationship[]>(relationships);
     const [selectedDegree, setSelectedDegree] = useState<number | ''>('');
     const [selectedClass, setSelectedClass] = useState<number | ''>('');
@@ -88,193 +75,199 @@ const TeacherManagement = () => {
         }
     };
 
-    return (
-        <Box className="p-6">
-            <Typography variant="h4" className="mb-4">
-                Gerenciamento de Professores
-            </Typography>
+    const getDegreeColor = (degreeName: string) => {
+        const lowerName = degreeName.toLowerCase();
+        if (lowerName.includes('fundamental')) {
+            return {
+                bg: alpha(theme.palette.info.main, 0.1),
+                color: theme.palette.info.main,
+            };
+        }
+        if (lowerName.includes('médio')) {
+            return {
+                bg: alpha(theme.palette.warning.main, 0.1),
+                color: theme.palette.warning.main,
+            };
+        }
+        if (lowerName.includes('técnico')) {
+            return {
+                bg: alpha(theme.palette.success.main, 0.1),
+                color: theme.palette.success.main,
+            };
+        }
+        if (lowerName.includes('superior')) {
+            return {
+                bg: alpha(theme.palette.secondary.main, 0.1),
+                color: theme.palette.secondary.main,
+            };
+        }
+        return {
+            bg: alpha(theme.palette.primary.main, 0.1),
+            color: theme.palette.primary.main,
+        };
+    };
 
-            <Box className="mb-6 flex gap-4">
-                <FormControl className="min-w-[200px]">
-                    <InputLabel>Série</InputLabel>
-                    <Select
-                        value={selectedDegree}
-                        label="Série"
-                        onChange={(e) => setSelectedDegree(e.target.value)}
-                        className="bg-white"
-                    >
-                        <MenuItem value="">Todas</MenuItem>
-                        {degrees.map((degree) => (
-                            <MenuItem key={degree.id} value={degree.id}>
-                                {degree.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <FormControl className="min-w-[200px]">
-                    <InputLabel>Classe</InputLabel>
-                    <Select
-                        value={selectedClass}
-                        label="Classe"
-                        onChange={(e) => setSelectedClass(e.target.value)}
-                        className="bg-white"
-                    >
-                        <MenuItem value="">Todas</MenuItem>
-                        {classes.map((cls) => (
-                            <MenuItem key={cls.id} value={cls.id}>
-                                {cls.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <Button 
-                    variant="contained" 
-                    onClick={() => setOpenDialog(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                    Adicionar Relacionamento
-                </Button>
-            </Box>
-
-            <TableContainer component={Paper} className="shadow-md">
-                <Table>
-                    <TableHead>
-                        <TableRow className="bg-gray-100">
-                            <TableCell className="font-semibold">Professor</TableCell>
-                            <TableCell className="font-semibold">Matéria</TableCell>
-                            <TableCell className="font-semibold">Série</TableCell>
-                            <TableCell className="font-semibold">Classe</TableCell>
-                            <TableCell className="font-semibold">Ações</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredRelationships.map((rel) => (
-                            <TableRow key={rel.id} className="hover:bg-gray-50">
-                                <TableCell>{getTeacherName(rel.teacherId)}</TableCell>
-                                <TableCell>{getTeacherSubject(rel.teacherId)}</TableCell>
-                                <TableCell>{getDegreeName(rel.degreeId)}</TableCell>
-                                <TableCell>{getClassName(rel.classId)}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        onClick={() => setShowStudents(showStudents === rel.degreeId ? null : rel.degreeId)}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-                                    >
-                                        {showStudents === rel.degreeId ? 'Ocultar Alunos' : 'Ver Alunos'}
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
-            {showStudents !== null && (
-                <Box className="mt-6">
-                    <Typography variant="h6" className="mb-4">
-                        Alunos da Série {getDegreeName(showStudents)}
-                    </Typography>
-                    <TableContainer component={Paper} className="shadow-md">
-                        <Table>
-                            <TableHead>
-                                <TableRow className="bg-gray-100">
-                                    <TableCell className="font-semibold">Nome</TableCell>
-                                    <TableCell className="font-semibold">Classe</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {getStudentsByDegree(showStudents).map((student) => (
-                                    <TableRow key={student.id} className="hover:bg-gray-50">
-                                        <TableCell>{student.name}</TableCell>
-                                        <TableCell>{getClassName(student.classId)}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
-            )}
-
-            <Dialog 
-                open={openDialog} 
-                onClose={() => setOpenDialog(false)}
-                className="rounded-lg"
-            >
-                <DialogTitle className="bg-gray-50">Adicionar Relacionamento</DialogTitle>
-                <DialogContent>
-                    <Box className="flex flex-col gap-4 pt-4">
-                        <FormControl fullWidth>
-                            <InputLabel>Professor</InputLabel>
-                            <Select
-                                value={newRelationship.teacherId ?? ''}
-                                label="Professor"
-                                onChange={(e) =>
-                                    setNewRelationship({ ...newRelationship, teacherId: e.target.value })
-                                }
-                                className="bg-white"
-                            >
-                                {teachers.map((teacher) => (
-                                    <MenuItem key={teacher.id} value={teacher.id}>
-                                        {teacher.name} - {teacher.subject}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel>Série</InputLabel>
-                            <Select
-                                value={newRelationship.degreeId ?? ''}
-                                label="Série"
-                                onChange={(e) =>
-                                    setNewRelationship({ ...newRelationship, degreeId: e.target.value })
-                                }
-                                className="bg-white"
-                            >
-                                {degrees.map((degree) => (
-                                    <MenuItem key={degree.id} value={degree.id}>
-                                        {degree.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel>Classe</InputLabel>
-                            <Select
-                                value={newRelationship.classId ?? ''}
-                                label="Classe"
-                                onChange={(e) =>
-                                    setNewRelationship({ ...newRelationship, classId: e.target.value })
-                                }
-                                className="bg-white"
-                            >
-                                {classes.map((cls) => (
-                                    <MenuItem key={cls.id} value={cls.id}>
-                                        {cls.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+    const columns = [
+        {
+            key: 'name',
+            label: 'Professor',
+            render: (item: TableItem) => (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                    <Box sx={{ fontWeight: 500 }}>{getTeacherName(item.teacherId as number)}</Box>
+                    <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                        {getTeacherSubject(item.teacherId as number)}
                     </Box>
-                </DialogContent>
-                <DialogActions className="bg-gray-50 p-4">
-                    <Button 
-                        onClick={() => setOpenDialog(false)}
-                        className="text-gray-600 hover:bg-gray-100 px-4 py-2 rounded-md transition-colors"
+                </Box>
+            ),
+        },
+        {
+            key: 'degree',
+            label: 'Série',
+            render: (item: TableItem) => {
+                const degreeName = getDegreeName(item.degreeId as number);
+                const colors = getDegreeColor(degreeName);
+                return (
+                    <Box
+                        sx={{
+                            backgroundColor: colors.bg,
+                            color: colors.color,
+                            fontWeight: 500,
+                            padding: '4px 8px',
+                            borderRadius: 1,
+                            display: 'inline-block',
+                        }}
                     >
-                        Cancelar
-                    </Button>
-                    <Button 
-                        onClick={handleAddRelationship} 
-                        variant="contained"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                        {degreeName}
+                    </Box>
+                );
+            },
+        },
+        {
+            key: 'class',
+            label: 'Classe',
+            render: (item: TableItem) => {
+                const className = getClassName(item.classId as number);
+                return (
+                    <Box
+                        sx={{
+                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.main,
+                            fontWeight: 500,
+                            padding: '4px 8px',
+                            borderRadius: 1,
+                            display: 'inline-block',
+                        }}
                     >
-                        Adicionar
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        {className}
+                    </Box>
+                );
+            },
+        },
+    ];
+
+    const studentColumns = [
+        {
+            key: 'name',
+            label: 'Aluno',
+            render: (item: TableItem) => (
+                <Box>
+                    <Box sx={{ fontWeight: 500 }}>{item.name}</Box>
+                    <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                        ID: {item.id}
+                    </Box>
+                </Box>
+            ),
+        },
+        {
+            key: 'class',
+            label: 'Classe',
+            render: (item: TableItem) => {
+                const className = getClassName(item.classId as number);
+                return (
+                    <Box
+                        sx={{
+                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.main,
+                            fontWeight: 500,
+                            padding: '4px 8px',
+                            borderRadius: 1,
+                            display: 'inline-block',
+                        }}
+                    >
+                        {className}
+                    </Box>
+                );
+            },
+        },
+    ];
+
+    return (
+        <Box
+            sx={{
+                minHeight: '100vh',
+                py: { xs: 3, sm: 4, md: 5 },
+            }}
+        >
+            <Container maxWidth="xl">
+                <Box sx={{ mb: 6 }}>
+                    <TeacherHeader />
+                </Box>
+
+                <Box sx={{ mb: 4 }}>
+                    <TeacherStats
+                        totalTeachers={teachers.length}
+                        totalDegrees={degrees.length}
+                        totalClasses={classes.length}
+                        totalRelationships={relationships.length}
+                    />
+                </Box>
+
+                <Paper elevation={0} sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+                    <Box sx={{ mb: 4 }}>
+                        <TeacherFilters
+                            selectedDegree={selectedDegree}
+                            selectedClass={selectedClass}
+                            degrees={degrees}
+                            classes={classes}
+                            onDegreeChange={setSelectedDegree}
+                            onClassChange={setSelectedClass}
+                            onAddClick={() => setOpenDialog(true)}
+                        />
+                    </Box>
+
+                    <Box sx={{ mb: 4 }}>
+                        <DataTable
+                            title="Lista de Professores"
+                            items={filteredRelationships}
+                            columns={columns}
+                            onShowDetails={setShowStudents}
+                            showDetailsId={showStudents}
+                            getDegreeColor={getDegreeColor}
+                        />
+                    </Box>
+
+                    {showStudents && (
+                        <Box sx={{ mt: 6 }}>
+                            <DataTable
+                                title={`Alunos da Série ${getDegreeName(showStudents)}`}
+                                items={getStudentsByDegree(showStudents)}
+                                columns={studentColumns}
+                            />
+                        </Box>
+                    )}
+                </Paper>
+            </Container>
+
+            <AddRelationshipDialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                onAdd={handleAddRelationship}
+                newRelationship={newRelationship}
+                setNewRelationship={setNewRelationship}
+                teachers={teachers}
+                degrees={degrees}
+                classes={classes}
+            />
         </Box>
     );
 };

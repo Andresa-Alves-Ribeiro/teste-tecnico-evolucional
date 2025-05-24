@@ -1,8 +1,21 @@
+type TableValue = string | number | boolean | null | undefined;
+
+export interface TableItem {
+    id: number;
+    teacherId?: number;
+    degreeId?: number;
+    classId?: number;
+    name?: string;
+    subject?: string;
+    [key: string]: TableValue;
+}
+
 export interface Student {
-  id: number;
-  name: string;
-  degreeId: number;
-  classId: number;
+    id: number;
+    name: string;
+    degreeId: number;
+    classId: number;
+    [key: string]: TableValue;
 }
 
 export interface Degree {
@@ -26,4 +39,5 @@ export interface Relationship {
   teacherId: number;
   degreeId: number;
   classId: number;
+  [key: string]: TableValue;
 } 
