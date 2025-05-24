@@ -89,18 +89,19 @@ const TeacherManagement: React.FC = () => {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Typography variant="h4" gutterBottom>
+        <Box className="p-6">
+            <Typography variant="h4" className="mb-4">
                 Gerenciamento de Professores
             </Typography>
 
-            <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
-                <FormControl sx={{ minWidth: 200 }}>
+            <Box className="mb-6 flex gap-4">
+                <FormControl className="min-w-[200px]">
                     <InputLabel>Série</InputLabel>
                     <Select
                         value={selectedDegree}
                         label="Série"
                         onChange={(e) => setSelectedDegree(e.target.value)}
+                        className="bg-white"
                     >
                         <MenuItem value="">Todas</MenuItem>
                         {degrees.map((degree) => (
@@ -111,12 +112,13 @@ const TeacherManagement: React.FC = () => {
                     </Select>
                 </FormControl>
 
-                <FormControl sx={{ minWidth: 200 }}>
+                <FormControl className="min-w-[200px]">
                     <InputLabel>Classe</InputLabel>
                     <Select
                         value={selectedClass}
                         label="Classe"
                         onChange={(e) => setSelectedClass(e.target.value)}
+                        className="bg-white"
                     >
                         <MenuItem value="">Todas</MenuItem>
                         {classes.map((cls) => (
@@ -127,25 +129,29 @@ const TeacherManagement: React.FC = () => {
                     </Select>
                 </FormControl>
 
-                <Button variant="contained" onClick={() => setOpenDialog(true)}>
+                <Button 
+                    variant="contained" 
+                    onClick={() => setOpenDialog(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                >
                     Adicionar Relacionamento
                 </Button>
             </Box>
 
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} className="shadow-md">
                 <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell>Professor</TableCell>
-                            <TableCell>Matéria</TableCell>
-                            <TableCell>Série</TableCell>
-                            <TableCell>Classe</TableCell>
-                            <TableCell>Ações</TableCell>
+                        <TableRow className="bg-gray-100">
+                            <TableCell className="font-semibold">Professor</TableCell>
+                            <TableCell className="font-semibold">Matéria</TableCell>
+                            <TableCell className="font-semibold">Série</TableCell>
+                            <TableCell className="font-semibold">Classe</TableCell>
+                            <TableCell className="font-semibold">Ações</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredRelationships.map((rel) => (
-                            <TableRow key={rel.id}>
+                            <TableRow key={rel.id} className="hover:bg-gray-50">
                                 <TableCell>{getTeacherName(rel.teacherId)}</TableCell>
                                 <TableCell>{getTeacherSubject(rel.teacherId)}</TableCell>
                                 <TableCell>{getDegreeName(rel.degreeId)}</TableCell>
@@ -153,6 +159,7 @@ const TeacherManagement: React.FC = () => {
                                 <TableCell>
                                     <Button
                                         onClick={() => setShowStudents(showStudents === rel.degreeId ? null : rel.degreeId)}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
                                     >
                                         {showStudents === rel.degreeId ? 'Ocultar Alunos' : 'Ver Alunos'}
                                     </Button>
@@ -164,21 +171,21 @@ const TeacherManagement: React.FC = () => {
             </TableContainer>
 
             {showStudents !== null && (
-                <Box sx={{ mt: 3 }}>
-                    <Typography variant="h6" gutterBottom>
+                <Box className="mt-6">
+                    <Typography variant="h6" className="mb-4">
                         Alunos da Série {getDegreeName(showStudents)}
                     </Typography>
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} className="shadow-md">
                         <Table>
                             <TableHead>
-                                <TableRow>
-                                    <TableCell>Nome</TableCell>
-                                    <TableCell>Classe</TableCell>
+                                <TableRow className="bg-gray-100">
+                                    <TableCell className="font-semibold">Nome</TableCell>
+                                    <TableCell className="font-semibold">Classe</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {getStudentsByDegree(showStudents).map((student) => (
-                                    <TableRow key={student.id}>
+                                    <TableRow key={student.id} className="hover:bg-gray-50">
                                         <TableCell>{student.name}</TableCell>
                                         <TableCell>{getClassName(student.classId)}</TableCell>
                                     </TableRow>
@@ -189,10 +196,14 @@ const TeacherManagement: React.FC = () => {
                 </Box>
             )}
 
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>Adicionar Relacionamento</DialogTitle>
+            <Dialog 
+                open={openDialog} 
+                onClose={() => setOpenDialog(false)}
+                className="rounded-lg"
+            >
+                <DialogTitle className="bg-gray-50">Adicionar Relacionamento</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+                    <Box className="flex flex-col gap-4 pt-4">
                         <FormControl fullWidth>
                             <InputLabel>Professor</InputLabel>
                             <Select
@@ -201,6 +212,7 @@ const TeacherManagement: React.FC = () => {
                                 onChange={(e) =>
                                     setNewRelationship({ ...newRelationship, teacherId: e.target.value })
                                 }
+                                className="bg-white"
                             >
                                 {teachers.map((teacher) => (
                                     <MenuItem key={teacher.id} value={teacher.id}>
@@ -218,6 +230,7 @@ const TeacherManagement: React.FC = () => {
                                 onChange={(e) =>
                                     setNewRelationship({ ...newRelationship, degreeId: e.target.value })
                                 }
+                                className="bg-white"
                             >
                                 {degrees.map((degree) => (
                                     <MenuItem key={degree.id} value={degree.id}>
@@ -235,6 +248,7 @@ const TeacherManagement: React.FC = () => {
                                 onChange={(e) =>
                                     setNewRelationship({ ...newRelationship, classId: e.target.value })
                                 }
+                                className="bg-white"
                             >
                                 {classes.map((cls) => (
                                     <MenuItem key={cls.id} value={cls.id}>
@@ -245,9 +259,18 @@ const TeacherManagement: React.FC = () => {
                         </FormControl>
                     </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
-                    <Button onClick={handleAddRelationship} variant="contained">
+                <DialogActions className="bg-gray-50 p-4">
+                    <Button 
+                        onClick={() => setOpenDialog(false)}
+                        className="text-gray-600 hover:bg-gray-100 px-4 py-2 rounded-md transition-colors"
+                    >
+                        Cancelar
+                    </Button>
+                    <Button 
+                        onClick={handleAddRelationship} 
+                        variant="contained"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
                         Adicionar
                     </Button>
                 </DialogActions>

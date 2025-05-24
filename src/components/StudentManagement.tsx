@@ -84,18 +84,19 @@ const StudentManagement: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box className="p-6">
+      <Typography variant="h4" className="mb-4">
         Gerenciamento de Alunos
       </Typography>
 
-      <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
-        <FormControl sx={{ minWidth: 200 }}>
+      <Box className="mb-6 flex gap-4">
+        <FormControl className="min-w-[200px]">
           <InputLabel>Série</InputLabel>
           <Select
             value={selectedDegree}
             label="Série"
             onChange={(e) => setSelectedDegree(e.target.value)}
+            className="bg-white"
           >
             <MenuItem value="">Todas</MenuItem>
             {degrees.map((degree) => (
@@ -106,12 +107,13 @@ const StudentManagement: React.FC = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl className="min-w-[200px]">
           <InputLabel>Classe</InputLabel>
           <Select
             value={selectedClass}
             label="Classe"
             onChange={(e) => setSelectedClass(e.target.value)}
+            className="bg-white"
           >
             <MenuItem value="">Todas</MenuItem>
             {classes.map((cls) => (
@@ -122,24 +124,28 @@ const StudentManagement: React.FC = () => {
           </Select>
         </FormControl>
 
-        <Button variant="contained" onClick={generateRandomStudents}>
+        <Button 
+          variant="contained" 
+          onClick={generateRandomStudents}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+        >
           Gerar 300 Alunos
         </Button>
       </Box>
 
-      <TableContainer component={Paper} sx={{ mb: 3 }}>
+      <TableContainer component={Paper} className="mb-6 shadow-md">
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Nome</TableCell>
-              <TableCell>Série</TableCell>
-              <TableCell>Classe</TableCell>
-              <TableCell>Ações</TableCell>
+            <TableRow className="bg-gray-100">
+              <TableCell className="font-semibold">Nome</TableCell>
+              <TableCell className="font-semibold">Série</TableCell>
+              <TableCell className="font-semibold">Classe</TableCell>
+              <TableCell className="font-semibold">Ações</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredStudents.map((student) => (
-              <TableRow key={student.id}>
+              <TableRow key={student.id} className="hover:bg-gray-50">
                 <TableCell>
                   {editingStudent?.id === student.id ? (
                     <TextField
@@ -147,6 +153,7 @@ const StudentManagement: React.FC = () => {
                       onChange={(e) =>
                         setEditingStudent({ ...editingStudent, name: e.target.value })
                       }
+                      className="w-full"
                     />
                   ) : (
                     student.name
@@ -162,6 +169,7 @@ const StudentManagement: React.FC = () => {
                           degreeId: e.target.value,
                         })
                       }
+                      className="w-full"
                     >
                       {degrees.map((degree) => (
                         <MenuItem key={degree.id} value={degree.id}>
@@ -183,6 +191,7 @@ const StudentManagement: React.FC = () => {
                           classId: e.target.value,
                         })
                       }
+                      className="w-full"
                     >
                       {classes.map((cls) => (
                         <MenuItem key={cls.id} value={cls.id}>
@@ -196,9 +205,19 @@ const StudentManagement: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   {editingStudent?.id === student.id ? (
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button 
+                      onClick={handleSave}
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                      Salvar
+                    </Button>
                   ) : (
-                    <Button onClick={() => handleEdit(student)}>Editar</Button>
+                    <Button 
+                      onClick={() => handleEdit(student)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                      Editar
+                    </Button>
                   )}
                 </TableCell>
               </TableRow>
@@ -207,18 +226,20 @@ const StudentManagement: React.FC = () => {
         </Table>
       </TableContainer>
 
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
+      <Box className="mt-8">
+        <Typography variant="h5" className="mb-4">
           Distribuição de Alunos por Série
         </Typography>
-        <BarChart width={800} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="students" fill="#8884d8" name="Número de Alunos" />
-        </BarChart>
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <BarChart width={800} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="students" fill="#8884d8" name="Número de Alunos" />
+          </BarChart>
+        </div>
       </Box>
     </Box>
   );
