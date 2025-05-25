@@ -77,8 +77,9 @@ export const getStudentColumns = ({
               }
               fullWidth
               size="small"
+              data-testid="select-field"
               sx={{
-                borderRadius: 2,
+                borderRadius: 8,
                 backgroundColor: alpha(theme.palette.background.paper, 0.8),
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: alpha(theme.palette.divider, 0.2),
@@ -136,8 +137,9 @@ export const getStudentColumns = ({
               }
               fullWidth
               size="small"
+              data-testid="select-field"
               sx={{
-                borderRadius: 2,
+                borderRadius: 8,
                 backgroundColor: alpha(theme.palette.background.paper, 0.8),
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: alpha(theme.palette.divider, 0.2),

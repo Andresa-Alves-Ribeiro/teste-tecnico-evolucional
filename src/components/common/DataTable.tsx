@@ -260,6 +260,20 @@ const DataTable: React.FC<DataTableProps> = ({
     const renderTableRow = (item: TableItem) => {
         const isEditing = editingItem?.id === item.id;
 
+        const getChipStyles = (column: Column, content: string) => ({
+            backgroundColor: getDegreeColor && column.key.includes('degree')
+                ? getDegreeColor(content).bg
+                : getClassColor && column.key.includes('class')
+                    ? getClassColor(content).bg
+                    : alpha(theme.palette.primary.main, 0.1),
+            color: getDegreeColor && column.key.includes('degree')
+                ? getDegreeColor(content).color
+                : getClassColor && column.key.includes('class')
+                    ? getClassColor(content).color
+                    : theme.palette.primary.main,
+            fontWeight: 500,
+        });
+
         return (
             <TableRow
                 key={item.id}
@@ -282,7 +296,19 @@ const DataTable: React.FC<DataTableProps> = ({
             >
                 {columns.map((column) => (
                     <TableCell key={column.key} align="left">
-                        {column.render ? column.render(item) : item[column.key]}
+                        {column.render ? (
+                            typeof column.render(item) === 'string' ? (
+                                <Chip
+                                    label={column.render(item)}
+                                    size="small"
+                                    sx={getChipStyles(column, column.render(item) as string)}
+                                />
+                            ) : (
+                                column.render(item)
+                            )
+                        ) : (
+                            item[column.key]
+                        )}
                     </TableCell>
                 ))}
                 {(onShowDetails || onEdit || onSave) && (

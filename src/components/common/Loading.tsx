@@ -10,10 +10,10 @@ const Loading: React.FC<LoadingProps> = ({ fullScreen = false }) => {
     : 'flex items-center justify-center p-4';
 
   return (
-    <div className={containerClasses}>
+    <div role="status" className={containerClasses}>
       <div className="relative">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 dark:border-gray-700 border-t-primary-light dark:border-t-primary-dark"></div>
-        <div className="absolute inset-0 animate-pulse rounded-full bg-primary-light/10 dark:bg-primary-dark/10"></div>
+        <div data-testid="loading-spinner" className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 dark:border-gray-700 border-t-primary-light dark:border-t-primary-dark"></div>
+        <div data-testid="loading-pulse" className="absolute inset-0 animate-pulse rounded-full bg-primary-light/10 dark:bg-primary-dark/10"></div>
       </div>
       <span className="sr-only">Carregando...</span>
     </div>

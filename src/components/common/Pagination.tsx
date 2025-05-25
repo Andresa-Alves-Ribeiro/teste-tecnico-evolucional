@@ -1,91 +1,149 @@
 import React from 'react';
+import { Box, Button, Typography, useTheme } from '@mui/material';
+import { styles } from '../../theme';
+import { alpha } from '@mui/material/styles';
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  showFirstLast?: boolean;
+  siblingCount?: number;
 }
+
+const PaginationButton: React.FC<{
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  isCurrentPage?: boolean;
+}> = ({ onClick, disabled, children, isCurrentPage }) => {
+  const theme = useTheme();
+  
+  return (
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      variant="outlined"
+      size="small"
+      sx={{
+        minWidth: '32px',
+        height: '32px',
+        padding: '4px 8px',
+        borderColor: isCurrentPage 
+          ? theme.palette.primary.main 
+          : alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+        color: isCurrentPage 
+          ? theme.palette.primary.main 
+          : theme.palette.text.primary,
+        backgroundColor: isCurrentPage 
+          ? alpha(theme.palette.primary.main, 0.08) 
+          : 'transparent',
+        '&:hover': {
+          borderColor: theme.palette.primary.main,
+          backgroundColor: alpha(theme.palette.primary.main, 0.04),
+        },
+        '&.Mui-disabled': {
+          borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+          color: alpha(theme.palette.text.primary, 0.38),
+        },
+      }}
+    >
+      {children}
+    </Button>
+  );
+};
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  showFirstLast = true,
+  siblingCount = 1,
 }) => {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const theme = useTheme();
 
-  const renderPageNumbers = () => {
-    const maxVisiblePages = 5;
-    const halfVisible = Math.floor(maxVisiblePages / 2);
+  const range = (start: number, end: number) => {
+    const length = end - start + 1;
+    return Array.from({ length }, (_, idx) => idx + start);
+  };
 
-    let startPage = Math.max(1, currentPage - halfVisible);
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+  const generatePaginationRange = () => {
+    const totalNumbers = siblingCount + 5;
+    const totalBlocks = totalNumbers + 2;
 
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    if (totalPages > totalBlocks) {
+      const startPage = Math.max(2, currentPage - siblingCount);
+      const endPage = Math.min(totalPages - 1, currentPage + siblingCount);
+
+      const pages = range(startPage, endPage);
+
+      const hasLeftSpill = startPage > 2;
+      const hasRightSpill = totalPages - endPage > 1;
+      const spillOffset = totalNumbers - (pages.length + 1);
+
+      return [
+        showFirstLast && 1,
+        hasLeftSpill && '...',
+        ...pages,
+        hasRightSpill && '...',
+        showFirstLast && totalPages,
+      ].filter(Boolean);
     }
 
-    return pages.slice(startPage - 1, endPage).map((page) => (
-      <button
-        key={page}
-        onClick={() => onPageChange(page)}
-        className={`px-3 py-1 rounded transition-colors ${
-          currentPage === page
-            ? 'bg-primary-light dark:bg-primary-dark text-white'
-            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
-        }`}
-        aria-current={currentPage === page ? 'page' : undefined}
-      >
-        {page}
-      </button>
-    ));
+    return range(1, totalPages);
   };
 
   return (
-    <div className="flex items-center justify-center space-x-2 mt-4">
-      <button
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 1,
+        mt: 3,
+      }}
+    >
+      <PaginationButton
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-        aria-label="Página anterior"
       >
         Anterior
-      </button>
+      </PaginationButton>
 
-      {currentPage > 3 && (
-        <>
-          <button
-            onClick={() => onPageChange(1)}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+      {generatePaginationRange().map((page, index) => {
+        if (page === '...') {
+          return (
+            <Typography
+              key={`ellipsis-${index}`}
+              sx={{
+                color: theme.palette.text.secondary,
+                px: 1,
+              }}
+            >
+              ...
+            </Typography>
+          );
+        }
+
+        return (
+          <PaginationButton
+            key={page}
+            onClick={() => onPageChange(page as number)}
+            disabled={currentPage === page}
+            isCurrentPage={currentPage === page}
           >
-            1
-          </button>
-          {currentPage > 4 && <span className="px-2 text-gray-500 dark:text-gray-400">...</span>}
-        </>
-      )}
+            {page}
+          </PaginationButton>
+        );
+      })}
 
-      {renderPageNumbers()}
-
-      {currentPage < totalPages - 2 && (
-        <>
-          {currentPage < totalPages - 3 && <span className="px-2 text-gray-500 dark:text-gray-400">...</span>}
-          <button
-            onClick={() => onPageChange(totalPages)}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-          >
-            {totalPages}
-          </button>
-        </>
-      )}
-
-      <button
+      <PaginationButton
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-        aria-label="Próxima página"
       >
         Próxima
-      </button>
-    </div>
+      </PaginationButton>
+    </Box>
   );
 };
 

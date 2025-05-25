@@ -123,6 +123,8 @@ const NavigationLink = ({ path, label, isActive }: { path: string; label: string
       component={Link}
       to={path}
       sx={linkStyles}
+      role="link"
+      aria-label={label}
     >
       {label}
     </Button>
@@ -268,14 +270,12 @@ const Header = () => {
                 color="inherit"
                 onClick={toggleDarkMode}
                 sx={{
-                  ml: 1,
-                  backgroundColor: alpha(theme.palette.common.white, 0.1),
+                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white',
                   '&:hover': {
-                    backgroundColor: alpha(theme.palette.common.white, 0.15),
-                    transform: 'scale(1.05)',
-                  },
-                  transition: 'all 0.2s ease',
+                    backgroundColor: alpha(theme.palette.common.white, 0.1),
+                  }
                 }}
+                data-testid="theme-toggle"
               >
                 {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
               </IconButton>

@@ -1,34 +1,55 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
 import StudentManagement from './components/student/StudentManagement';
 import TeacherManagement from './components/teacher/TeacherManagement';
 import Layout from './components/layout/Layout';
-import { AppProvider } from './context/AppContext';
-import Feedback from './components/common/Feedback';
+import { AppProvider, useApp } from './context/AppContext';
+import ActionFeedback from './components/common/ActionFeedback';
 import Loading from './components/common/Loading';
-import { useApp } from './context/AppContext';
+import PageTransition from './components/common/PageTransition';
 import { getTheme } from './styles/theme';
 
 const AppContent: React.FC = () => {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const theme = React.useMemo(() => getTheme(state.isDarkMode ? 'dark' : 'light'), [state.isDarkMode]);
+
+  const handleCloseFeedback = () => {
+    dispatch({ type: 'HIDE_FEEDBACK' });
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {state.loading && <Loading fullScreen />}
-      {state.feedback.message && (
-        <Feedback
-          type={state.feedback.type!}
-          message={state.feedback.message}
-        />
-      )}
+      <ActionFeedback
+        open={!!state.feedback.message}
+        message={state.feedback.message || ''}
+        severity={state.feedback.type || 'info'}
+        onClose={handleCloseFeedback}
+      />
       <Layout>
-        <Routes>
-          <Route path="/" element={<StudentManagement />} />
-          <Route path="/teachers" element={<TeacherManagement />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PageTransition>
+                  <StudentManagement />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/teachers"
+              element={
+                <PageTransition>
+                  <TeacherManagement />
+                </PageTransition>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </Layout>
     </ThemeProvider>
   );

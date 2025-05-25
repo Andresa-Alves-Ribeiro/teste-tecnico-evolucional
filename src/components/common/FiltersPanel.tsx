@@ -47,40 +47,46 @@ const FiltersPanel = ({
 }: FiltersPanelProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isDarkMode = theme.palette.mode === 'dark';
+
+  const panelStyles = {
+    p: { xs: 2, sm: 3 },
+    borderRadius: 3,
+    background: isDarkMode
+      ? 'linear-gradient(135deg, rgba(31, 41, 55, 0.95), rgba(17, 24, 39, 0.98))'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98))',
+    boxShadow: isDarkMode
+      ? '0 4px 24px rgba(0, 0, 0, 0.3)'
+      : '0 4px 24px rgba(0, 0, 0, 0.06)',
+    border: isDarkMode
+      ? '1px solid rgba(255, 255, 255, 0.2)'
+      : '1px solid rgba(0, 0, 0, 0.1)',
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative' as const,
+    overflow: 'hidden',
+    '&:hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: isDarkMode
+        ? '0 8px 32px rgba(0, 0, 0, 0.4)'
+        : '0 8px 32px rgba(0, 0, 0, 0.08)',
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '4px',
+      background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+    },
+  };
 
   return (
     <Paper
+      data-testid="filters-panel"
+      data-theme={isDarkMode ? 'dark' : 'light'}
       elevation={0}
-      sx={{
-        p: { xs: 2, sm: 3 },
-        borderRadius: 3,
-        background: theme.palette.mode === 'dark'
-          ? `linear-gradient(135deg, ${alpha('#1F2937', 0.95)}, ${alpha('#111827', 0.98)})`
-          : `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)}, ${alpha(theme.palette.background.paper, 0.98)})`,
-        backdropFilter: 'blur(10px)',
-        boxShadow: theme.palette.mode === 'dark'
-          ? `0 4px 24px ${alpha(theme.palette.common.black, 0.3)}`
-          : `0 4px 24px ${alpha(theme.palette.common.black, 0.06)}`,
-        border: `1px solid ${alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.2 : 0.1)}`,
-        transition: 'all 0.3s ease-in-out',
-        position: 'relative',
-        overflow: 'hidden',
-        '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: theme.palette.mode === 'dark'
-            ? `0 8px 32px ${alpha(theme.palette.common.black, 0.4)}`
-            : `0 8px 32px ${alpha(theme.palette.common.black, 0.08)}`,
-        },
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '4px',
-          background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-        },
-      }}
+      sx={panelStyles}
     >
       <Stack
         direction="row"
@@ -89,7 +95,7 @@ const FiltersPanel = ({
         sx={{ mb: 3 }}
       >
         <FilterListIcon sx={{ 
-          color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
+          color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main,
           fontSize: 28 
         }} />
         <Typography
@@ -119,7 +125,7 @@ const FiltersPanel = ({
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               transition: 'all 0.2s ease-in-out',
-              backgroundColor: theme.palette.mode === 'dark'
+              backgroundColor: isDarkMode
                 ? alpha('#1F2937', 0.8)
                 : alpha(theme.palette.background.paper, 0.8),
               '&:hover fieldset': {
@@ -133,7 +139,7 @@ const FiltersPanel = ({
               },
             },
             '& .MuiInputLabel-root': {
-              color: theme.palette.mode === 'dark' ? theme.palette.text.secondary : theme.palette.text.secondary,
+              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
               fontWeight: 500,
               '&.Mui-focused': {
                 color: theme.palette.primary.main,
@@ -142,22 +148,24 @@ const FiltersPanel = ({
             },
           }}
         >
-          <InputLabel>
+          <InputLabel id="degree-select-label" htmlFor="degree-select">
             <Stack direction="row" spacing={1} alignItems="center">
               <SchoolIcon sx={{ 
                 fontSize: 20,
-                color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main
+                color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
               }} />
               <span>Série</span>
             </Stack>
           </InputLabel>
           <Select
+            id="degree-select"
             value={selectedDegree}
+            labelId="degree-select-label"
             label={
               <Stack direction="row" spacing={1} alignItems="center">
                 <SchoolIcon sx={{ 
                   fontSize: 20,
-                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main
+                  color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
                 }} />
                 <span>Série</span>
               </Stack>
@@ -169,7 +177,7 @@ const FiltersPanel = ({
                 px: 2,
               },
               '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+                borderColor: alpha(theme.palette.divider, isDarkMode ? 0.3 : 0.2),
               },
             }}
           >
@@ -178,8 +186,8 @@ const FiltersPanel = ({
                 label="Todas as Séries"
                 size="small"
                 sx={{
-                  backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.1),
-                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
+                  backgroundColor: alpha(theme.palette.primary.main, isDarkMode ? 0.2 : 0.1),
+                  color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main,
                   fontWeight: 500,
                 }}
               />
@@ -192,13 +200,7 @@ const FiltersPanel = ({
                   py: 1.5,
                   px: 2,
                   '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.15 : 0.08),
-                  },
-                  '&.Mui-selected': {
-                    backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.12),
-                    '&:hover': {
-                      backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.25 : 0.16),
-                    },
+                    backgroundColor: alpha(theme.palette.primary.main, isDarkMode ? 0.15 : 0.08),
                   },
                 }}
               >
@@ -215,7 +217,7 @@ const FiltersPanel = ({
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               transition: 'all 0.2s ease-in-out',
-              backgroundColor: theme.palette.mode === 'dark'
+              backgroundColor: isDarkMode
                 ? alpha('#1F2937', 0.8)
                 : alpha(theme.palette.background.paper, 0.8),
               '&:hover fieldset': {
@@ -229,7 +231,7 @@ const FiltersPanel = ({
               },
             },
             '& .MuiInputLabel-root': {
-              color: theme.palette.mode === 'dark' ? theme.palette.text.secondary : theme.palette.text.secondary,
+              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
               fontWeight: 500,
               '&.Mui-focused': {
                 color: theme.palette.primary.main,
@@ -238,22 +240,24 @@ const FiltersPanel = ({
             },
           }}
         >
-          <InputLabel>
+          <InputLabel id="class-select-label" htmlFor="class-select">
             <Stack direction="row" spacing={1} alignItems="center">
               <ClassIcon sx={{ 
                 fontSize: 20,
-                color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main
+                color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
               }} />
               <span>Classe</span>
             </Stack>
           </InputLabel>
           <Select
+            id="class-select"
             value={selectedClass}
+            labelId="class-select-label"
             label={
               <Stack direction="row" spacing={1} alignItems="center">
                 <ClassIcon sx={{ 
                   fontSize: 20,
-                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main
+                  color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
                 }} />
                 <span>Classe</span>
               </Stack>
@@ -265,7 +269,7 @@ const FiltersPanel = ({
                 px: 2,
               },
               '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+                borderColor: alpha(theme.palette.divider, isDarkMode ? 0.3 : 0.2),
               },
             }}
           >
@@ -274,31 +278,25 @@ const FiltersPanel = ({
                 label="Todas as Classes"
                 size="small"
                 sx={{
-                  backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.1),
-                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : theme.palette.primary.main,
+                  backgroundColor: alpha(theme.palette.primary.main, isDarkMode ? 0.2 : 0.1),
+                  color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main,
                   fontWeight: 500,
                 }}
               />
             </MenuItem>
-            {classes.map((cls) => (
+            {classes.map((classItem) => (
               <MenuItem
-                key={cls.id}
-                value={cls.id}
+                key={classItem.id}
+                value={classItem.id}
                 sx={{
                   py: 1.5,
                   px: 2,
                   '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.15 : 0.08),
-                  },
-                  '&.Mui-selected': {
-                    backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.2 : 0.12),
-                    '&:hover': {
-                      backgroundColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.25 : 0.16),
-                    },
+                    backgroundColor: alpha(theme.palette.primary.main, isDarkMode ? 0.15 : 0.08),
                   },
                 }}
               >
-                {cls.name}
+                {classItem.name}
               </MenuItem>
             ))}
           </Select>
@@ -307,25 +305,22 @@ const FiltersPanel = ({
         {actionButton && (
           <Button
             variant="contained"
-            onClick={actionButton.onClick}
             startIcon={actionButton.icon || <AddIcon />}
+            onClick={actionButton.onClick}
             sx={{
-              px: 3,
-              py: 1.5,
+              minWidth: isMobile ? '100%' : 200,
+              height: 48,
               borderRadius: 2,
               textTransform: 'none',
               fontWeight: 600,
-              fontSize: '1rem',
-              backgroundColor: theme.palette.mode === 'dark' ? theme.palette.primary.dark : theme.palette.primary.main,
-              color: 'white',
-              boxShadow: theme.palette.mode === 'dark'
-                ? `0 4px 14px ${alpha(theme.palette.primary.main, 0.3)}`
-                : `0 4px 14px ${alpha(theme.palette.primary.main, 0.4)}`,
+              boxShadow: isDarkMode
+                ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+                : '0 4px 12px rgba(0, 0, 0, 0.1)',
               '&:hover': {
-                backgroundColor: theme.palette.mode === 'dark' ? theme.palette.primary.main : theme.palette.primary.dark,
-                boxShadow: theme.palette.mode === 'dark'
-                  ? `0 6px 20px ${alpha(theme.palette.primary.main, 0.4)}`
-                  : `0 6px 20px ${alpha(theme.palette.primary.main, 0.6)}`,
+                transform: 'translateY(-2px)',
+                boxShadow: isDarkMode
+                  ? '0 6px 16px rgba(0, 0, 0, 0.4)'
+                  : '0 6px 16px rgba(0, 0, 0, 0.15)',
               },
             }}
           >
