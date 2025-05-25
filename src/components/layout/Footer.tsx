@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white pt-8 pb-6 mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -8,10 +8,10 @@ const Footer: React.FC = () => {
           {/* Company Info */}
           <div className="space-y-6 max-w-sm">
             <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-              School Management
+              Gestão Escolar
             </h3>
             <p className="text-gray-300 leading-relaxed text-sm">
-              A comprehensive solution for managing your educational institution with modern tools and features.
+              Uma solução completa para gerenciar sua instituição de ensino com ferramentas e recursos modernos.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300 transform hover:scale-110">
@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
           {/* Quick Links */}
           <div className="space-y-6">
             <h3 className="text-xl font-semibold text-white border-b border-gray-700 pb-2 inline-block">
-              Quick Links
+              Links Rápidos
             </h3>
             <ul className="space-y-4">
               <li>
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
                   <svg className="w-4 h-4 text-blue-400 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
                   </svg>
-                  <span>Home</span>
+                  <span>Início</span>
                 </a>
               </li>
               <li>
@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
                   <svg className="w-4 h-4 text-blue-400 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
                   </svg>
-                  <span>Teachers</span>
+                  <span>Professores</span>
                 </a>
               </li>
               <li>
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                   <svg className="w-4 h-4 text-blue-400 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
                   </svg>
-                  <span>Students</span>
+                  <span>Alunos</span>
                 </a>
               </li>
             </ul>
@@ -68,14 +68,14 @@ const Footer: React.FC = () => {
           {/* Contact Info */}
           <div className="space-y-6">
             <h3 className="text-xl font-semibold text-white border-b border-gray-700 pb-2 inline-block">
-              Contact
+              Contato
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start space-x-4">
                 <svg className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
-                <span className="text-gray-300 text-sm">contact@schoolmanagement.com</span>
+                <span className="text-gray-300 text-sm">contato@gestaoescolar.com</span>
               </li>
               <li className="flex items-start space-x-4">
                 <svg className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                <span className="text-gray-300 text-sm">123 Education St, Learning City</span>
+                <span className="text-gray-300 text-sm">Rua da Educação, 123, Cidade do Aprendizado</span>
               </li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
         {/* Copyright */}
         <div className="border-t border-gray-700 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} School Management. All rights reserved.
+            &copy; {new Date().getFullYear()} Gestão Escolar. Todos os direitos reservados.
           </p>
         </div>
       </div>

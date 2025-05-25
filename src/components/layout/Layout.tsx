@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, CssBaseline } from '@mui/material';
+import { Container, Box, CssBaseline, useTheme, useMediaQuery } from '@mui/material';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -7,21 +7,25 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout = ({ children }: LayoutProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <Box className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
+    <Box className="min-h-screen flex flex-col bg-gray-100">
       <CssBaseline />
       <Header />
       <Container 
         maxWidth="xl" 
-        className="py-8 px-4 sm:px-6 lg:px-8 flex-grow"
+        className="flex-grow"
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: 'calc(100vh - 64px - 400px)', // Adjust for header and footer height
+          pt: { xs: '88px', sm: '96px' },
+          minHeight: 'calc(100vh - 64px - 400px)',
         }}
       >
-        <Box className="bg-white rounded-lg shadow-lg p-6 sm:p-8 flex-grow">
+        <Box className="flex-grow">
           {children}
         </Box>
       </Container>
