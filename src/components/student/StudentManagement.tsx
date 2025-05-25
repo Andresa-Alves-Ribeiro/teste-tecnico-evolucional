@@ -1,21 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Container, Paper, useTheme, alpha, TextField, Select, MenuItem } from '@mui/material';
-import { Student, TableItem } from '../../types';
-import { students as initialStudents, degrees, classes } from '../../data/mockData';
+import { Box, Container, Paper, useTheme, alpha } from '@mui/material';
+import { Student, TableItem, Degree, Class } from '../../types';
+import studentsData from '../../data/students.json';
+import degreesData from '../../data/degrees.json';
+import classesData from '../../data/classes.json';
 import DataTable from '../common/DataTable';
 import StudentHeader from './management/StudentHeader';
 import StudentStats from './management/StudentStats';
 import StudentFilters from './StudentFilters';
 import StudentChart from './StudentChart';
+import { getStudentColumns } from './management/StudentColumns';
 
 const StudentManagement = () => {
   const theme = useTheme();
-  const [students, setStudents] = useState<Student[]>(initialStudents);
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>(initialStudents);
+  const [students, setStudents] = useState<Student[]>(studentsData as Student[]);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>(studentsData as Student[]);
   const [selectedDegree, setSelectedDegree] = useState<number | ''>('');
   const [selectedClass, setSelectedClass] = useState<number | ''>('');
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
+  const degrees = degreesData as Degree[];
+  const classes = classesData.classes.map((cls, index) => ({
+    id: index + 1,
+    name: cls.name
+  })) as Class[];
 
   const filterStudents = useCallback(() => {
     let filtered = [...students];
@@ -33,8 +41,9 @@ const StudentManagement = () => {
       name: degree.name,
       students: students.filter(student => student.degreeId === degree.id).length
     }));
+    console.log('Chart Data:', data);
     setChartData(data);
-  }, [students]);
+  }, [students, degrees]);
 
   useEffect(() => {
     filterStudents();
@@ -46,6 +55,14 @@ const StudentManagement = () => {
 
   const handleEdit = (item: TableItem) => {
     setEditingStudent(item as Student);
+  };
+
+  const handleSave = (item: TableItem) => {
+    const updatedStudents = students.map(student => 
+      student.id === item.id ? { ...student, ...item } : student
+    );
+    setStudents(updatedStudents);
+    setEditingStudent(null);
   };
 
   const handleEditingItemChange = (item: TableItem) => {
@@ -115,163 +132,15 @@ const StudentManagement = () => {
     return colors[colorIndex];
   };
 
-  const columns = [
-    {
-      key: 'name',
-      label: 'Aluno',
-      render: (item: TableItem) => (
-        <Box>
-          {editingStudent?.id === item.id ? (
-            <TextField
-              value={editingStudent.name}
-              onChange={(e) =>
-                setEditingStudent({ ...editingStudent, name: e.target.value })
-              }
-              fullWidth
-              size="small"
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2,
-                  backgroundColor: alpha(theme.palette.background.paper, 0.8),
-                  '&:hover fieldset': {
-                    borderColor: theme.palette.primary.main,
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderWidth: '1px',
-                  },
-                },
-              }}
-            />
-          ) : (
-            <>
-              <Box sx={{ fontWeight: 500 }}>{item.name}</Box>
-              <Box sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
-                ID: {item.id}
-              </Box>
-            </>
-          )}
-        </Box>
-      ),
-    },
-    {
-      key: 'degree',
-      label: 'Série',
-      render: (item: TableItem) => {
-        const degree = degrees.find((d) => d.id === item.degreeId);
-        if (editingStudent?.id === item.id) {
-          return (
-            <Select
-              value={editingStudent.degreeId}
-              onChange={(e) =>
-                setEditingStudent({
-                  ...editingStudent,
-                  degreeId: e.target.value,
-                })
-              }
-              fullWidth
-              size="small"
-              sx={{
-                borderRadius: 2,
-                backgroundColor: alpha(theme.palette.background.paper, 0.8),
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: alpha(theme.palette.divider, 0.2),
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: theme.palette.primary.main,
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '1px',
-                },
-              }}
-            >
-              {degrees.map((degree) => (
-                <MenuItem key={degree.id} value={degree.id}>
-                  {degree.name}
-                </MenuItem>
-              ))}
-            </Select>
-          );
-        }
-        const colors = degree ? getDegreeColor(degree.name) : {
-          bg: alpha(theme.palette.primary.main, 0.1),
-          color: theme.palette.primary.main,
-        };
-        return (
-          <Box
-            sx={{
-              backgroundColor: colors.bg,
-              color: colors.color,
-              fontWeight: 500,
-              padding: '4px 8px',
-              borderRadius: 1,
-              display: 'inline-block',
-            }}
-          >
-            {degree?.name}
-          </Box>
-        );
-      },
-    },
-    {
-      key: 'class',
-      label: 'Classe',
-      render: (item: TableItem) => {
-        const classItem = classes.find((c) => c.id === item.classId);
-        if (editingStudent?.id === item.id) {
-          return (
-            <Select
-              value={editingStudent.classId}
-              onChange={(e) =>
-                setEditingStudent({
-                  ...editingStudent,
-                  classId: e.target.value,
-                })
-              }
-              fullWidth
-              size="small"
-              sx={{
-                borderRadius: 2,
-                backgroundColor: alpha(theme.palette.background.paper, 0.8),
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: alpha(theme.palette.divider, 0.2),
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: theme.palette.primary.main,
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '1px',
-                },
-              }}
-            >
-              {classes.map((cls) => (
-                <MenuItem key={cls.id} value={cls.id}>
-                  {cls.name}
-                </MenuItem>
-              ))}
-            </Select>
-          );
-        }
-        const colors = classItem ? getClassColor(classItem.name) : {
-          bg: alpha(theme.palette.primary.main, 0.1),
-          color: theme.palette.primary.main,
-        };
-        return (
-          <Box
-            sx={{
-              backgroundColor: colors.bg,
-              color: colors.color,
-              fontWeight: 500,
-              padding: '4px 8px',
-              borderRadius: 1,
-              display: 'inline-block',
-            }}
-          >
-            {classItem?.name}
-          </Box>
-        );
-      },
-    },
-  ];
+  const columns = getStudentColumns({
+    editingStudent,
+    setEditingStudent,
+    degrees,
+    classes,
+    getDegreeColor,
+    getClassColor,
+    theme,
+  });
 
   return (
     <Box
@@ -314,12 +183,13 @@ const StudentManagement = () => {
               onEdit={handleEdit}
               editingItem={editingStudent}
               onEditingItemChange={handleEditingItemChange}
+              onSave={handleSave}
               getDegreeColor={getDegreeColor}
               getClassColor={getClassColor}
             />
           </Box>
 
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mb: 12, height: 400 }}>
             <StudentChart chartData={chartData} />
           </Box>
         </Paper>

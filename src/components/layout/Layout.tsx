@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, CssBaseline } from '@mui/material';
+import { Container, Box, CssBaseline, useTheme, useMediaQuery } from '@mui/material';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -8,6 +8,9 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box className="min-h-screen flex flex-col bg-gray-100">
       <CssBaseline />
@@ -18,6 +21,7 @@ const Layout = ({ children }: LayoutProps) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          pt: { xs: '88px', sm: '96px' },
           minHeight: 'calc(100vh - 64px - 400px)',
         }}
       >

@@ -107,18 +107,19 @@ const Header = () => {
                 paper: {
                   sx: {
                     mt: 1.5,
-                    background: 'rgba(26, 35, 126, 0.95)',
+                    background: 'linear-gradient(to right, #111827, #1f2937)',
                     backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: '12px',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#ffffff',
+                    right: 0,
+                    left: 'auto !important'
                   }
                 }
               }}
             >
               <MenuItem component={Link} to="/" onClick={handleClose}>Gerenciar Alunos</MenuItem>
               <MenuItem component={Link} to="/teachers" onClick={handleClose}>Gerenciar Professores</MenuItem>
-              <MenuItem component={Link} to="/classes" onClick={handleClose}>Turmas</MenuItem>
-              <MenuItem component={Link} to="/grades" onClick={handleClose}>Notas</MenuItem>
             </Menu>
           </>
         ) : (

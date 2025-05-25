@@ -51,7 +51,7 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
                             value={newRelationship.teacherId ?? ''}
                             label="Professor"
                             onChange={(e) =>
-                                setNewRelationship({ ...newRelationship, teacherId: e.target.value })
+                                setNewRelationship({ ...newRelationship, teacherId: Number(e.target.value) })
                             }
                             className="bg-white"
                         >
@@ -69,7 +69,7 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
                             value={newRelationship.degreeId ?? ''}
                             label="Série"
                             onChange={(e) =>
-                                setNewRelationship({ ...newRelationship, degreeId: e.target.value })
+                                setNewRelationship({ ...newRelationship, degreeId: Number(e.target.value) })
                             }
                             className="bg-white"
                         >
@@ -87,7 +87,7 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
                             value={newRelationship.classId ?? ''}
                             label="Classe"
                             onChange={(e) =>
-                                setNewRelationship({ ...newRelationship, classId: e.target.value })
+                                setNewRelationship({ ...newRelationship, classId: Number(e.target.value) })
                             }
                             className="bg-white"
                         >

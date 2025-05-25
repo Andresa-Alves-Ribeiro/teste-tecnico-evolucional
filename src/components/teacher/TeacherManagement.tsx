@@ -107,6 +107,21 @@ const TeacherManagement = () => {
         };
     };
 
+    const getClassColor = (className: string) => {
+        const classColors = [
+            { bg: alpha(theme.palette.primary.main, 0.1), color: theme.palette.primary.main },
+            { bg: alpha(theme.palette.secondary.main, 0.1), color: theme.palette.secondary.main },
+            { bg: alpha(theme.palette.success.main, 0.1), color: theme.palette.success.main },
+            { bg: alpha(theme.palette.warning.main, 0.1), color: theme.palette.warning.main },
+            { bg: alpha(theme.palette.error.main, 0.1), color: theme.palette.error.main },
+            { bg: alpha(theme.palette.info.main, 0.1), color: theme.palette.info.main },
+        ];
+        
+        // Use the class name to determine a consistent color
+        const index = className.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % classColors.length;
+        return classColors[index];
+    };
+
     const columns = [
         {
             key: 'name',
@@ -147,11 +162,12 @@ const TeacherManagement = () => {
             label: 'Classe',
             render: (item: TableItem) => {
                 const className = getClassName(item.classId as number);
+                const colors = getClassColor(className);
                 return (
                     <Box
                         sx={{
-                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                            color: theme.palette.primary.main,
+                            backgroundColor: colors.bg,
+                            color: colors.color,
                             fontWeight: 500,
                             padding: '4px 8px',
                             borderRadius: 1,
@@ -179,15 +195,38 @@ const TeacherManagement = () => {
             ),
         },
         {
+            key: 'degree',
+            label: 'Série',
+            render: (item: TableItem) => {
+                const degreeName = getDegreeName(item.degreeId as number);
+                const colors = getDegreeColor(degreeName);
+                return (
+                    <Box
+                        sx={{
+                            backgroundColor: colors.bg,
+                            color: colors.color,
+                            fontWeight: 500,
+                            padding: '4px 8px',
+                            borderRadius: 1,
+                            display: 'inline-block',
+                        }}
+                    >
+                        {degreeName}
+                    </Box>
+                );
+            },
+        },
+        {
             key: 'class',
             label: 'Classe',
             render: (item: TableItem) => {
                 const className = getClassName(item.classId as number);
+                const colors = getClassColor(className);
                 return (
                     <Box
                         sx={{
-                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                            color: theme.palette.primary.main,
+                            backgroundColor: colors.bg,
+                            color: colors.color,
                             fontWeight: 500,
                             padding: '4px 8px',
                             borderRadius: 1,
@@ -248,11 +287,23 @@ const TeacherManagement = () => {
 
                     {showStudents && (
                         <Box sx={{ mt: 6 }}>
-                            <DataTable
-                                title={`Alunos da Série ${getDegreeName(showStudents)}`}
-                                items={getStudentsByDegree(showStudents)}
-                                columns={studentColumns}
-                            />
+                            {getStudentsByDegree(showStudents).length > 0 ? (
+                                <DataTable
+                                    title={`Alunos da Série ${getDegreeName(showStudents)}`}
+                                    items={getStudentsByDegree(showStudents)}
+                                    columns={studentColumns}
+                                />
+                            ) : (
+                                <Box sx={{ 
+                                    textAlign: 'center', 
+                                    py: 4, 
+                                    color: 'text.secondary',
+                                    backgroundColor: alpha(theme.palette.background.paper, 0.6),
+                                    borderRadius: 1
+                                }}>
+                                    Não há alunos cadastrados nesta série.
+                                </Box>
+                            )}
                         </Box>
                     )}
                 </Paper>
