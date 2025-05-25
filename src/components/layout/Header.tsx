@@ -1,14 +1,196 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, useTheme, useMediaQuery, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box, useTheme, useMediaQuery, Avatar, IconButton, Menu, MenuItem, Container } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 import SchoolIcon from '@mui/icons-material/School';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { alpha } from '@mui/material/styles';
+import { useDarkMode } from '../../hooks/useDarkMode';
+
+const navigationItems = [
+  { path: '/', label: 'Gerenciar Alunos' },
+  { path: '/teachers', label: 'Gerenciar Professores' }
+];
+
+const Logo = () => {
+  const theme = useTheme();
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Avatar
+        sx={{
+          bgcolor: 'primary.light',
+          width: { xs: 36, sm: 42 },
+          height: { xs: 36, sm: 42 },
+          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.25)}`,
+          transition: 'transform 0.2s ease',
+          '&:hover': {
+            transform: 'scale(1.05)',
+          }
+        }}
+      >
+        <SchoolIcon sx={{ 
+          fontSize: { xs: 20, sm: 24 }, 
+          color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white' 
+        }} />
+      </Avatar>
+      <Typography
+        variant="h5"
+        component="div"
+        sx={{
+          color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white',
+          fontWeight: 600,
+          letterSpacing: '0.3px',
+          fontSize: { xs: '1.1rem', sm: '1.3rem' },
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: -4,
+            left: 0,
+            width: '32px',
+            height: '2px',
+            background: theme.palette.mode === 'dark' 
+              ? `linear-gradient(90deg, ${theme.palette.primary.light}, transparent)`
+              : 'linear-gradient(90deg, white, transparent)',
+            borderRadius: '1px',
+          }
+        }}
+      >
+        EduGestão
+      </Typography>
+    </Box>
+  );
+};
+
+const NavigationLink = ({ path, label, isActive }: { path: string; label: string; isActive: boolean }) => {
+  const theme = useTheme();
+  const linkStyles = {
+    color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white',
+    px: 2.5,
+    py: 1,
+    borderRadius: '8px',
+    transition: 'all 0.2s ease',
+    textTransform: 'none',
+    fontSize: '0.95rem',
+    fontWeight: 500,
+    position: 'relative',
+    overflow: 'hidden',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: alpha(theme.palette.common.white, 0.1),
+      transform: 'translateX(-100%)',
+      transition: 'transform 0.3s ease',
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      bottom: 0,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: isActive ? '80%' : '0%',
+      height: '2px',
+      background: theme.palette.mode === 'dark' 
+        ? `linear-gradient(90deg, ${theme.palette.primary.light}, transparent)`
+        : 'linear-gradient(90deg, white, transparent)',
+      transition: 'width 0.3s ease',
+      borderRadius: '2px',
+    },
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.1),
+      transform: 'translateY(-1px)',
+      '&::before': {
+        transform: 'translateX(100%)',
+      },
+      '&::after': {
+        width: '80%',
+      }
+    },
+    '&:active': {
+      transform: 'translateY(0)',
+    }
+  };
+
+  return (
+    <Button
+      color="inherit"
+      component={Link}
+      to={path}
+      sx={linkStyles}
+    >
+      {label}
+    </Button>
+  );
+};
+
+const MobileMenu = ({ anchorEl, onClose, isActive }: { anchorEl: HTMLElement | null; onClose: () => void; isActive: (path: string) => boolean }) => {
+  const theme = useTheme();
+  return (
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={onClose}
+      slotProps={{
+        paper: {
+          sx: {
+            mt: 1.5,
+            minWidth: 200,
+            background: theme.palette.mode === 'dark' ? theme.palette.background.paper : 'white',
+            border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+            boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.08)}`,
+          }
+        }
+      }}
+    >
+      {navigationItems.map(({ path, label }) => (
+        <MenuItem
+          key={path}
+          component={Link}
+          to={path}
+          onClick={onClose}
+          sx={{
+            py: 1.5,
+            color: theme.palette.text.primary,
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: 0,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: isActive(path) ? '80%' : '0%',
+              height: '2px',
+              background: `linear-gradient(90deg, ${theme.palette.primary.main}, transparent)`,
+              transition: 'width 0.3s ease',
+              borderRadius: '2px',
+            },
+            '&:hover': {
+              background: alpha(theme.palette.primary.main, 0.08),
+              '&::after': {
+                width: '80%',
+              }
+            },
+          }}
+        >
+          {label}
+        </MenuItem>
+      ))}
+    </Menu>
+  );
+};
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const location = useLocation();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -18,250 +200,103 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <AppBar
       position="fixed"
       elevation={0}
       sx={{
-        background: 'linear-gradient(to right, #111827, #1f2937)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        background: theme.palette.mode === 'dark'
+          ? `linear-gradient(to right, ${theme.palette.background.paper}, ${alpha(theme.palette.background.paper, 0.98)})`
+          : `linear-gradient(to right, ${theme.palette.primary.main}, ${alpha(theme.palette.primary.dark, 0.95)})`,
+        boxShadow: `0 2px 12px ${alpha(theme.palette.common.black, 0.08)}`,
+        backdropFilter: 'blur(8px)',
+        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
         zIndex: theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar
-        sx={{
-          px: { xs: 2, sm: 4, md: 6 },
-          py: { xs: 1.5, sm: 2 },
-          maxWidth: '1400px',
-          margin: '0 auto',
-          width: '100%',
-          position: 'relative',
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            bottom: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '90%',
-            height: '1px',
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-          }
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Avatar
-            sx={{
-              bgcolor: 'primary.light',
-              width: { xs: 40, sm: 48 },
-              height: { xs: 40, sm: 48 },
-              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            }}
-          >
-            <SchoolIcon sx={{ fontSize: { xs: 24, sm: 32 } }} />
-          </Avatar>
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{
-              color: '#ffffff',
-              fontWeight: 700,
-              letterSpacing: '0.5px',
-              fontSize: { xs: '1.25rem', sm: '1.5rem' },
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              position: 'relative',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: -4,
-                left: 0,
-                width: '40px',
-                height: '3px',
-                background: 'linear-gradient(90deg, #64b5f6, transparent)',
-                borderRadius: '2px',
-              }
-            }}
-          >
-            EduGestão
-          </Typography>
-        </Box>
+      <Container maxWidth="xl">
+        <Toolbar
+          sx={{
+            px: { xs: 2, sm: 3 },
+            py: { xs: 1.5, sm: 2 },
+            minHeight: { xs: 64, sm: 70 },
+            position: 'relative',
+          }}
+        >
+          <Logo />
 
-        {isMobile ? (
-          <>
-            <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleMenu}
-              sx={{ ml: 'auto' }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              slotProps={{
-                paper: {
-                  sx: {
-                    mt: 1.5,
-                    background: 'linear-gradient(to right, #111827, #1f2937)',
-                    backdropFilter: 'blur(10px)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    color: '#ffffff',
-                    right: 0,
-                    left: 'auto !important'
+          {isMobile ? (
+            <>
+              <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMenu}
+                sx={{ 
+                  ml: 'auto',
+                  color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white',
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.common.white, 0.1),
                   }
-                }
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <MobileMenu anchorEl={anchorEl} onClose={handleClose} isActive={isActive} />
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 1.5,
+                alignItems: 'center',
+                ml: 'auto',
               }}
             >
-              <MenuItem component={Link} to="/" onClick={handleClose}>Gerenciar Alunos</MenuItem>
-              <MenuItem component={Link} to="/teachers" onClick={handleClose}>Gerenciar Professores</MenuItem>
-            </Menu>
-          </>
-        ) : (
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              alignItems: 'center',
-              ml: 'auto',
-            }}
-          >
-            <Button
-              color="inherit"
-              component={Link}
-              to="/"
-              sx={{
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                borderRadius: '8px',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 500,
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(45deg, rgba(255,255,255,0.1), transparent)',
-                  transform: 'translateX(-100%)',
-                  transition: 'transform 0.3s ease',
-                },
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '0%',
-                  height: '2px',
-                  background: 'linear-gradient(90deg, #60a5fa, #3b82f6)',
-                  transition: 'width 0.3s ease',
-                  borderRadius: '2px',
-                },
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                  '&::before': {
-                    transform: 'translateX(100%)',
+              {navigationItems.map(({ path, label }) => (
+                <NavigationLink
+                  key={path}
+                  path={path}
+                  label={label}
+                  isActive={isActive(path)}
+                />
+              ))}
+              <IconButton
+                color="inherit"
+                onClick={toggleDarkMode}
+                sx={{
+                  ml: 1,
+                  backgroundColor: alpha(theme.palette.common.white, 0.1),
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.common.white, 0.15),
+                    transform: 'scale(1.05)',
                   },
-                  '&::after': {
-                    width: '80%',
-                  }
-                },
-                '&:active': {
-                  transform: 'translateY(0)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                }
-              }}
-            >
-              Gerenciar Alunos
-            </Button>
-
-            <Button
-              color="inherit"
-              component={Link}
-              to="/teachers"
-              sx={{
-                color: '#ffffff',
-                px: 3,
-                py: 1.5,
-                borderRadius: '8px',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                textTransform: 'none',
-                fontSize: '1rem',
-                fontWeight: 500,
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(45deg, rgba(255,255,255,0.1), transparent)',
-                  transform: 'translateX(-100%)',
-                  transition: 'transform 0.3s ease',
-                },
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '0%',
-                  height: '2px',
-                  background: 'linear-gradient(90deg, #60a5fa, #3b82f6)',
-                  transition: 'width 0.3s ease',
-                  borderRadius: '2px',
-                },
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                  '&::before': {
-                    transform: 'translateX(100%)',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+              <IconButton
+                color="inherit"
+                sx={{
+                  ml: 1,
+                  backgroundColor: alpha(theme.palette.common.white, 0.1),
+                  '&:hover': {
+                    backgroundColor: alpha(theme.palette.common.white, 0.15),
+                    transform: 'scale(1.05)',
                   },
-                  '&::after': {
-                    width: '80%',
-                  }
-                },
-                '&:active': {
-                  transform: 'translateY(0)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                }
-              }}
-            >
-              Gerenciar Professores
-            </Button>
-
-            <IconButton
-              color="inherit"
-              sx={{
-                ml: 2,
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                }
-              }}
-            >
-              <AccountCircleIcon />
-            </IconButton>
-          </Box>
-        )}
-      </Toolbar>
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <AccountCircleIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 };

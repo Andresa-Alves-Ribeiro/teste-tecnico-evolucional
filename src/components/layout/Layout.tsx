@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Box, CssBaseline, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Container, useTheme } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -7,28 +8,52 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Box className="min-h-screen flex flex-col bg-gray-100">
-      <CssBaseline />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        background: theme.palette.mode === 'dark'
+          ? theme.palette.background.default
+          : alpha(theme.palette.background.default, 0.95),
+      }}
+    >
       <Header />
-      <Container 
-        maxWidth="xl" 
-        className="flex-grow"
+      
+      <Box
+        component="main"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          pt: { xs: '88px', sm: '96px' },
-          minHeight: 'calc(100vh - 64px - 400px)',
+          flexGrow: 1,
+          pt: { xs: 12, sm: 14 },
+          pb: { xs: 4, sm: 6 },
+          background: theme.palette.mode === 'dark'
+            ? `linear-gradient(180deg, ${alpha(theme.palette.background.paper, 0.8)}, ${theme.palette.background.default})`
+            : `linear-gradient(180deg, ${alpha(theme.palette.background.paper, 0.9)}, ${theme.palette.background.default})`,
         }}
       >
-        <Box className="flex-grow">
-          {children}
-        </Box>
-      </Container>
+        <Container
+          maxWidth="xl"
+          sx={{
+            px: { xs: 2, sm: 3 },
+            height: '100%',
+          }}
+        >
+          <Box
+            sx={{
+              borderRadius: 2,
+              backdropFilter: 'blur(8px)',
+              minHeight: 'calc(100vh - 200px)',
+            }}
+          >
+            {children}
+          </Box>
+        </Container>
+      </Box>
+
       <Footer />
     </Box>
   );
