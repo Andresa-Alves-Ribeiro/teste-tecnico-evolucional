@@ -17,8 +17,23 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === 'dark';
 
+  const cardStyles = {
+    p: 3,
+    borderRadius: 3,
+    backgroundColor: isDarkMode ? 'rgb(31, 41, 55)' : theme.palette.background.paper,
+    border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: isDarkMode 
+        ? `0 8px 32px ${alpha(theme.palette.common.black, 0.4)}`
+        : `0 8px 32px ${alpha(theme.palette.common.black, 0.08)}`,
+    },
+  };
+
   return (
     <Box
+      data-testid="stats-container"
       sx={{
         display: 'grid',
         gridTemplateColumns: {
@@ -33,33 +48,21 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
       {stats.map((stat, index) => (
         <Paper
           key={index}
+          data-testid="stats-card"
           elevation={0}
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            background: isDarkMode 
-              ? `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)}, ${alpha(theme.palette.background.paper, 0.98)})`
-              : `linear-gradient(135deg, ${alpha(stat.color, 0.1)}, ${alpha(stat.color, 0.05)})`,
-            border: `1px solid ${isDarkMode ? alpha(theme.palette.divider, 0.2) : alpha(stat.color, 0.1)}`,
-            transition: 'all 0.3s ease-in-out',
-            '&:hover': {
-              transform: 'translateY(-4px)',
-              boxShadow: isDarkMode 
-                ? `0 8px 32px ${alpha(theme.palette.common.black, 0.4)}`
-                : `0 8px 32px ${alpha(stat.color, 0.15)}`,
-            },
-          }}
+          sx={cardStyles}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Avatar
+              data-testid="stats-avatar"
               sx={{
                 width: 48,
                 height: 48,
                 backgroundColor: isDarkMode 
-                  ? alpha(stat.color, 0.2)
+                  ? 'rgb(33, 150, 243)'
                   : alpha(stat.color, 0.1),
                 color: isDarkMode 
-                  ? theme.palette.common.white
+                  ? 'rgb(255, 255, 255)'
                   : stat.color,
               }}
             >
@@ -71,7 +74,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
                 sx={{
                   fontWeight: 700,
                   color: isDarkMode 
-                    ? theme.palette.common.white
+                    ? 'rgb(255, 255, 255)'
                     : theme.palette.text.primary,
                   mb: 0.5,
                 }}

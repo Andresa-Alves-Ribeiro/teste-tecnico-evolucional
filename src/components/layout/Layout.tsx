@@ -49,10 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 borderRadius: 2,
                 backdropFilter: 'blur(8px)',
                 minHeight: 'calc(100vh - 200px)',
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  boxShadow: theme.shadows[4],
-                },
+                transition: 'all 0.3s ease-in-out'
               }}
             >
               {children}

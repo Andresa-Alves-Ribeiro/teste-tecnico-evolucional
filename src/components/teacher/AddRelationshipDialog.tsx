@@ -46,14 +46,19 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
             <DialogContent>
                 <Box className="flex flex-col gap-4 pt-4">
                     <FormControl fullWidth>
-                        <InputLabel>Professor</InputLabel>
+                        <InputLabel id="teacher-select-label">Professor</InputLabel>
                         <Select
+                            labelId="teacher-select-label"
+                            id="teacher-select"
                             value={newRelationship.teacherId ?? ''}
                             label="Professor"
                             onChange={(e) =>
                                 setNewRelationship({ ...newRelationship, teacherId: Number(e.target.value) })
                             }
                             className="bg-white"
+                            inputProps={{
+                                'aria-label': 'Professor'
+                            }}
                         >
                             {teachers.map((teacher) => (
                                 <MenuItem key={teacher.id} value={teacher.id}>
@@ -64,14 +69,19 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <InputLabel>Série</InputLabel>
+                        <InputLabel id="degree-select-label">Série</InputLabel>
                         <Select
+                            labelId="degree-select-label"
+                            id="degree-select"
                             value={newRelationship.degreeId ?? ''}
                             label="Série"
                             onChange={(e) =>
                                 setNewRelationship({ ...newRelationship, degreeId: Number(e.target.value) })
                             }
                             className="bg-white"
+                            inputProps={{
+                                'aria-label': 'Série'
+                            }}
                         >
                             {degrees.map((degree) => (
                                 <MenuItem key={degree.id} value={degree.id}>
@@ -82,14 +92,19 @@ const AddRelationshipDialog: React.FC<AddRelationshipDialogProps> = ({
                     </FormControl>
 
                     <FormControl fullWidth>
-                        <InputLabel>Classe</InputLabel>
+                        <InputLabel id="class-select-label">Classe</InputLabel>
                         <Select
+                            labelId="class-select-label"
+                            id="class-select"
                             value={newRelationship.classId ?? ''}
                             label="Classe"
                             onChange={(e) =>
                                 setNewRelationship({ ...newRelationship, classId: Number(e.target.value) })
                             }
                             className="bg-white"
+                            inputProps={{
+                                'aria-label': 'Classe'
+                            }}
                         >
                             {classes.map((cls) => (
                                 <MenuItem key={cls.id} value={cls.id}>

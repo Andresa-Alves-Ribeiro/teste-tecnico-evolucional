@@ -40,13 +40,13 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const getColor = () => {
     switch (type) {
       case 'edit':
-        return theme.palette.primary.main;
+        return 'rgb(59, 130, 246)';
       case 'save':
-        return theme.palette.success.main;
+        return 'rgb(46, 125, 50)';
       case 'delete':
-        return theme.palette.error.main;
+        return 'rgb(211, 47, 47)';
       case 'view':
-        return theme.palette.info.main;
+        return 'rgb(2, 136, 209)';
       default:
         return theme.palette.primary.main;
     }
@@ -75,6 +75,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
         size="small"
         sx={{
           color: getColor(),
+          transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           '&:hover': {
             backgroundColor: alpha(getColor(), 0.1),
           },

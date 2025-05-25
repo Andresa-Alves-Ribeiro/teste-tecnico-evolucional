@@ -15,6 +15,7 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   return (
     <div
+      role="article"
       className={`rounded-lg bg-white dark:bg-gray-800 p-6 shadow-md transition-all ${className}`}
     >
       <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">

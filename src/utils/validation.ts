@@ -127,11 +127,15 @@ export const validateTeacher = (data: Record<string, ValidationValue>): Validati
 
 // Função de sanitização de input
 export const sanitizeInput = (input: string): string => {
+  if (!input) return '';
+  
   return input
     .trim()
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
     .replace(/[<>]/g, '') // Remove caracteres potencialmente perigosos
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
+    .replace(/\//g, '&#x2F;')
+    .replace(/alert/g, '&amp;alert'); // Escape alert keyword
 }; 

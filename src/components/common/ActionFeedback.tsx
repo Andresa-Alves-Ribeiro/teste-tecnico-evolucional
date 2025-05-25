@@ -35,7 +35,7 @@ const ActionFeedback: React.FC<ActionFeedbackProps> = ({
         variant="filled"
         sx={{
           width: '100%',
-          boxShadow: (theme) => theme.shadows[4],
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
           '& .MuiAlert-icon': {
             fontSize: 24,
           },
@@ -45,7 +45,7 @@ const ActionFeedback: React.FC<ActionFeedbackProps> = ({
           },
         }}
       >
-        {message}
+        <span aria-label={`${severity} alert`}>{message}</span>
       </Alert>
     </Snackbar>
   );

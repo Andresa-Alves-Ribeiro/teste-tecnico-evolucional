@@ -40,7 +40,7 @@ const StudentStats = ({
     },
     {
       title: 'Média por Turma',
-      value: Math.round(totalStudents / totalClasses),
+      value: totalClasses === 0 ? 0 : Math.round(totalStudents / totalClasses),
       icon: SchoolIcon,
       color: theme.palette.warning.main,
     },

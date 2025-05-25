@@ -24,6 +24,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 
   return (
     <Box
+      data-testid="skeleton-container"
       sx={{
         width: fullWidth ? '100%' : width,
         display: 'flex',
@@ -34,6 +35,7 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
       {Array.from({ length: rows }).map((_, index) => (
         <Skeleton
           key={index}
+          data-testid={`skeleton-${index}`}
           variant={variant}
           width={fullWidth ? '100%' : width}
           height={height}

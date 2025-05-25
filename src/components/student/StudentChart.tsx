@@ -52,8 +52,8 @@ const StudentChart = ({ chartData, loading = false }: StudentChartProps) => {
           borderRadius: 2,
         }}
       >
-        <Skeleton variant="text" width="60%" height={40} sx={{ mb: 3 }} />
-        <Skeleton variant="rectangular" height={300} />
+        <Skeleton variant="text" width="60%" height={40} sx={{ mb: 3 }} data-testid="skeleton" />
+        <Skeleton variant="rectangular" height={300} data-testid="skeleton" />
       </Paper>
     );
   }

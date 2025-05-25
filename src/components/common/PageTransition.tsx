@@ -19,6 +19,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
       }}
     >
       <Box
+        data-testid="page-transition-box"
         sx={{
           minHeight: '100%',
           display: 'flex',

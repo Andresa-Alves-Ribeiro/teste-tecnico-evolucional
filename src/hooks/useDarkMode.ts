@@ -16,13 +16,15 @@ export function useDarkMode() {
   }, [dispatch]);
 
   const toggleDarkMode = () => {
+    const newMode = !state.isDarkMode;
     dispatch({ type: 'TOGGLE_DARK_MODE' });
-    if (state.isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
+    
+    if (newMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   };
 

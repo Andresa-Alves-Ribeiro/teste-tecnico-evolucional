@@ -15,7 +15,8 @@ const PaginationButton: React.FC<{
   onClick: () => void;
   disabled?: boolean;
   children: React.ReactNode;
-}> = ({ onClick, disabled, children }) => {
+  isCurrentPage?: boolean;
+}> = ({ onClick, disabled, children, isCurrentPage }) => {
   const theme = useTheme();
   
   return (
@@ -28,8 +29,15 @@ const PaginationButton: React.FC<{
         minWidth: '32px',
         height: '32px',
         padding: '4px 8px',
-        borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
-        color: theme.palette.text.primary,
+        borderColor: isCurrentPage 
+          ? theme.palette.primary.main 
+          : alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+        color: isCurrentPage 
+          ? theme.palette.primary.main 
+          : theme.palette.text.primary,
+        backgroundColor: isCurrentPage 
+          ? alpha(theme.palette.primary.main, 0.08) 
+          : 'transparent',
         '&:hover': {
           borderColor: theme.palette.primary.main,
           backgroundColor: alpha(theme.palette.primary.main, 0.04),
@@ -122,16 +130,7 @@ const Pagination: React.FC<PaginationProps> = ({
             key={page}
             onClick={() => onPageChange(page as number)}
             disabled={currentPage === page}
-            sx={{
-              ...(currentPage === page && {
-                backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.main,
-                '&:hover': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                },
-              }),
-            }}
+            isCurrentPage={currentPage === page}
           >
             {page}
           </PaginationButton>
