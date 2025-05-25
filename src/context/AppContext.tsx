@@ -1,47 +1,99 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Student } from '../types/Student';
 import { Teacher } from '../types/Teacher';
 
-interface AppContextType {
+interface AppState {
+  feedback: {
+    type: 'success' | 'error' | 'info' | null;
+    message: string | null;
+  };
+  loading: boolean;
   selectedStudent: Student | null;
   selectedTeacher: Teacher | null;
-  setSelectedStudent: (student: Student | null) => void;
-  setSelectedTeacher: (teacher: Teacher | null) => void;
   isDarkMode: boolean;
-  toggleDarkMode: () => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+type AppAction =
+  | { type: 'SHOW_FEEDBACK'; payload: { type: 'success' | 'error' | 'info'; message: string } }
+  | { type: 'HIDE_FEEDBACK' }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_SELECTED_STUDENT'; payload: Student | null }
+  | { type: 'SET_SELECTED_TEACHER'; payload: Teacher | null }
+  | { type: 'TOGGLE_DARK_MODE' };
 
-export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const initialState: AppState = {
+  feedback: {
+    type: null,
+    message: null,
+  },
+  loading: false,
+  selectedStudent: null,
+  selectedTeacher: null,
+  isDarkMode: false,
+};
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-  };
+const AppContext = createContext<{
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+} | undefined>(undefined);
+
+const appReducer = (state: AppState, action: AppAction): AppState => {
+  switch (action.type) {
+    case 'SHOW_FEEDBACK':
+      return {
+        ...state,
+        feedback: {
+          type: action.payload.type,
+          message: action.payload.message,
+        },
+      };
+    case 'HIDE_FEEDBACK':
+      return {
+        ...state,
+        feedback: {
+          type: null,
+          message: null,
+        },
+      };
+    case 'SET_LOADING':
+      return {
+        ...state,
+        loading: action.payload,
+      };
+    case 'SET_SELECTED_STUDENT':
+      return {
+        ...state,
+        selectedStudent: action.payload,
+      };
+    case 'SET_SELECTED_TEACHER':
+      return {
+        ...state,
+        selectedTeacher: action.payload,
+      };
+    case 'TOGGLE_DARK_MODE':
+      return {
+        ...state,
+        isDarkMode: !state.isDarkMode,
+      };
+    default:
+      return state;
+  }
+};
+
+export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
   return (
-    <AppContext.Provider
-      value={{
-        selectedStudent,
-        selectedTeacher,
-        setSelectedStudent,
-        setSelectedTeacher,
-        isDarkMode,
-        toggleDarkMode,
-      }}
-    >
+    <AppContext.Provider value={{ state, dispatch }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-export const useAppContext = () => {
+export const useApp = () => {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error('useApp must be used within an AppProvider');
   }
   return context;
 }; 
