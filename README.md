@@ -1,4 +1,6 @@
+<p align="center">
 # Sistema de Gerenciamento Escolar
+</p>
 
 <p align="center">
   <a href="#sobre">Sobre</a> •
@@ -15,6 +17,51 @@
 ## 📝 Sobre o Projeto
 
 Este é um sistema abrangente de gerenciamento escolar desenvolvido com React, TypeScript e Material-UI. O sistema oferece uma maneira moderna e eficiente de gerenciar estudantes, professores e dados educacionais através de uma interface intuitiva.
+
+Este projeto consiste em duas telas principais, cada uma com duas partes de funcionalidades relacionadas ao gerenciamento de alunos e professores em um ambiente educacional.
+
+## 📸 Capturas de Tela
+
+### Modo Desktop
+![Tela desktop](/screenshots/desktop.png)
+
+### Mobile
+![Tela Mobile](/screenshots/mobile.png)
+
+## Tela 1 - Gerenciamento de Alunos
+
+### Parte 1
+- Criar combo de filtro baseado nos JSONs 'degrees' e 'classes'
+- Popular a tela com as informações de students e suas relações (nome do degree, nome do class)
+- Implementar opção para editar o nome dos students e a class atribuída
+- Filtrar conforme combo sempre considerando os dados pós-alteração
+
+### Parte 2
+- Criar botão que gera mais 300 students e os distribui entre os degrees e classes
+- Gerar gráfico com a quantidade de students por degree
+- Nota: A cada clique no botão serão gerados + 300 students e o gráfico deverá ser atualizado
+
+## Tela 2 - Gerenciamento de Professores
+
+### Parte 1
+- Criar combo filtro baseado nos JSONs 'degrees' e 'classes'
+- Popular a tela utilizando o JSON relationships, exibindo:
+  - Nome do professor
+  - Nome da matéria
+  - Todos os nomes dos degrees relacionados
+  - Todos os nomes de classe de cada class relacionada ao degree
+- Criar botão que ao clicar, traz os students relacionados ao degree em questão
+
+### Parte 2
+- Criar formulário para gerar um novo registro do relationships
+- O registro gerado deve ser compatível com as operações da parte 1 da tela 2
+
+## Observações
+- Não é necessário executar todas as tarefas
+- O mais importante é executar cada tarefa da melhor forma possível
+- Você pode começar tanto pela parte 1 quanto pela parte 2
+- Não fique batendo cabeça! Faça o que conseguir da melhor forma
+
 
 ### 🎯 Objetivos
 
@@ -101,6 +148,17 @@ Este é um sistema abrangente de gerenciamento escolar desenvolvido com React, T
 
 5. Acesse [http://localhost:3000](http://localhost:3000) no seu navegador.
 
+## 🌐 Deploy
+
+O projeto está hospedado na Vercel e pode ser acessado através do link:
+[https://teste-tecnico-evolucional.vercel.app/](https://teste-tecnico-evolucional.vercel.app/)
+
+### Sobre o Deploy
+- Hospedagem gratuita na Vercel
+- Deploy automático a cada push para a branch main
+- Ambiente de produção otimizado
+- SSL/HTTPS habilitado por padrão
+
 ## 📁 Estrutura do Projeto
 
 ```
@@ -172,41 +230,3 @@ Olá! 👋 Sou Andresa A Ribeiro, uma desenvolvedora Front-end apaixonada por cr
   <a href="mailto:seu-email@exemplo.com"><img src="https://img.shields.io/static/v1?logoWidth=15&logoColor=ff69b4&logo=gmail&label=Email&message=seu-email@exemplo.com&color=ff69b4" target="_blank"></a>
   <a href="https://www.linkedin.com/in/seu-perfil/"><img alt="LinkedIn Profile" src="https://img.shields.io/static/v1?logoWidth=15&logoColor=0A66C2&logo=LinkedIn&label=LinkedIn&message=seu-perfil&color=0A66C2"></a>
 </p>
-
-# Front-End Test Project
-
-Este projeto consiste em duas telas principais, cada uma com duas partes de funcionalidades relacionadas ao gerenciamento de alunos e professores em um ambiente educacional.
-
-## Tela 1 - Gerenciamento de Alunos
-
-### Parte 1
-- Criar combo de filtro baseado nos JSONs 'degrees' e 'classes'
-- Popular a tela com as informações de students e suas relações (nome do degree, nome do class)
-- Implementar opção para editar o nome dos students e a class atribuída
-- Filtrar conforme combo sempre considerando os dados pós-alteração
-
-### Parte 2
-- Criar botão que gera mais 300 students e os distribui entre os degrees e classes
-- Gerar gráfico com a quantidade de students por degree
-- Nota: A cada clique no botão serão gerados + 300 students e o gráfico deverá ser atualizado
-
-## Tela 2 - Gerenciamento de Professores
-
-### Parte 1
-- Criar combo filtro baseado nos JSONs 'degrees' e 'classes'
-- Popular a tela utilizando o JSON relationships, exibindo:
-  - Nome do professor
-  - Nome da matéria
-  - Todos os nomes dos degrees relacionados
-  - Todos os nomes de classe de cada class relacionada ao degree
-- Criar botão que ao clicar, traz os students relacionados ao degree em questão
-
-### Parte 2
-- Criar formulário para gerar um novo registro do relationships
-- O registro gerado deve ser compatível com as operações da parte 1 da tela 2
-
-## Observações
-- Não é necessário executar todas as tarefas
-- O mais importante é executar cada tarefa da melhor forma possível
-- Você pode começar tanto pela parte 1 quanto pela parte 2
-- Não fique batendo cabeça! Faça o que conseguir da melhor forma
