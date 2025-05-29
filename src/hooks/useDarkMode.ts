@@ -5,44 +5,44 @@ export function useDarkMode() {
   const { state, dispatch } = useApp();
 
   useEffect(() => {
-    // Verifica se o usuário já tem uma preferência salva
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initializeTheme = () => {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // Se não houver tema salvo, usa a preferência do sistema
-    if (!savedTheme) {
-      if (prefersDark) {
-        document.documentElement.classList.add('dark');
-        dispatch({ type: 'TOGGLE_DARK_MODE' });
+      if (savedTheme) {
+        const isDark = savedTheme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        dispatch({ type: 'SET_DARK_MODE', payload: isDark });
+        return;
       }
-      return;
-    }
 
-    // Se houver tema salvo, aplica ele
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-      if (!state.isDarkMode) {
-        dispatch({ type: 'TOGGLE_DARK_MODE' });
+      const isDark = prefersDark;
+      document.documentElement.classList.toggle('dark', isDark);
+      dispatch({ type: 'SET_DARK_MODE', payload: isDark });
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    };
+
+    initializeTheme();
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        const isDark = e.matches;
+        document.documentElement.classList.toggle('dark', isDark);
+        dispatch({ type: 'SET_DARK_MODE', payload: isDark });
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
       }
-    } else {
-      document.documentElement.classList.remove('dark');
-      if (state.isDarkMode) {
-        dispatch({ type: 'TOGGLE_DARK_MODE' });
-      }
-    }
-  }, [dispatch, state.isDarkMode]);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [dispatch]);
 
   const toggleDarkMode = () => {
     const newMode = !state.isDarkMode;
     dispatch({ type: 'SET_DARK_MODE', payload: newMode });
-    
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    document.documentElement.classList.toggle('dark', newMode);
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
   };
 
   return {

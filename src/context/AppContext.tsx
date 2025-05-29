@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Student } from '../types/Student';
 import { Teacher } from '../types/Teacher';
 
@@ -25,11 +25,8 @@ type AppAction =
 const getInitialTheme = () => {
   if (typeof window !== 'undefined') {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      return true;
-    }
-    if (savedTheme === 'light') {
-      return false;
+    if (savedTheme) {
+      return savedTheme === 'dark';
     }
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
@@ -102,15 +99,6 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-
-  useEffect(() => {
-    // Aplica a classe dark no elemento html baseado no estado inicial
-    if (state.isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [state.isDarkMode]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>
