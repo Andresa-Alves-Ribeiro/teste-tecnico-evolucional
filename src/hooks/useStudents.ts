@@ -1,48 +1,57 @@
 import { useState, useEffect } from 'react';
-import { Student } from '../types/Student';
+import { Student } from '../types';
+
+const STORAGE_KEY = 'students';
 
 export const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [students, setStudents] = useState<Student[]>(() => {
+    // Tenta carregar os dados do localStorage ao inicializar
+    const savedStudents = localStorage.getItem(STORAGE_KEY);
+    return savedStudents ? JSON.parse(savedStudents) : [];
+  });
+  const [degreeFilter, setDegreeFilter] = useState('');
+  const [classFilter, setClassFilter] = useState('');
 
+  // Salva no localStorage sempre que students mudar
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        // Aqui você pode implementar a chamada à API real
-        const response = await fetch('/api/students');
-        const data = await response.json();
-        setStudents(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Erro ao carregar estudantes');
-        setLoading(false);
-      }
-    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
+  }, [students]);
 
-    fetchStudents();
-  }, []);
+  const filteredStudents = students.filter(student => {
+    const matchesDegree = !degreeFilter || student.degree === degreeFilter;
+    const matchesClass = !classFilter || student.class === classFilter;
+    return matchesDegree && matchesClass;
+  });
 
   const addStudent = (student: Student) => {
     setStudents(prev => [...prev, student]);
   };
 
-  const updateStudent = (id: string, updatedStudent: Student) => {
+  const updateStudent = (updatedStudent: Student) => {
     setStudents(prev => prev.map(student => 
-      student.id === id ? updatedStudent : student
+      student.id === updatedStudent.id ? updatedStudent : student
     ));
   };
 
-  const deleteStudent = (id: string) => {
+  const deleteStudent = (id: number) => {
     setStudents(prev => prev.filter(student => student.id !== id));
+  };
+
+  const clearFilters = () => {
+    setDegreeFilter('');
+    setClassFilter('');
   };
 
   return {
     students,
-    loading,
-    error,
+    filteredStudents,
+    degreeFilter,
+    classFilter,
     addStudent,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    setDegreeFilter,
+    setClassFilter,
+    clearFilters
   };
 }; 

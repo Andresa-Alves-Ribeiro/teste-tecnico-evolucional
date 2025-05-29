@@ -10,10 +10,11 @@ import StudentStats from './management/StudentStats';
 import StudentFilters from './StudentFilters';
 import StudentChart from './StudentChart';
 import { getStudentColumns } from './management/StudentColumns';
+import { useStudents } from '../../hooks/useStudents';
 
 const StudentManagement = () => {
   const theme = useTheme();
-  const [students, setStudents] = useState<Student[]>(studentsData as Student[]);
+  const { students, updateStudent, addStudent } = useStudents();
   const [filteredStudents, setFilteredStudents] = useState<Student[]>(studentsData as Student[]);
   const [selectedDegree, setSelectedDegree] = useState<number | ''>('');
   const [selectedClass, setSelectedClass] = useState<number | ''>('');
@@ -33,6 +34,7 @@ const StudentManagement = () => {
     if (selectedClass) {
       filtered = filtered.filter(student => student.classId === selectedClass);
     }
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
     setFilteredStudents(filtered);
   }, [selectedDegree, selectedClass, students]);
 
@@ -58,10 +60,7 @@ const StudentManagement = () => {
   };
 
   const handleSave = (item: TableItem) => {
-    const updatedStudents = students.map(student => 
-      student.id === item.id ? { ...student, ...item } : student
-    );
-    setStudents(updatedStudents);
+    updateStudent(item as Student);
     setEditingStudent(null);
   };
 
@@ -81,7 +80,7 @@ const StudentManagement = () => {
         classId: randomClass,
       });
     }
-    setStudents([...students, ...newStudents]);
+    newStudents.forEach(student => addStudent(student));
   };
 
   const getDegreeColor = (degreeName: string) => {

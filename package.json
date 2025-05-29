@@ -59,10 +59,5 @@
     "postcss-normalize": "^8.0.1",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-    }
   }
 }

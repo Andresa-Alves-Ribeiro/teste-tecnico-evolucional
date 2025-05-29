@@ -31,7 +31,7 @@ const StudentFilters = ({
       onDegreeChange={onDegreeChange}
       onClassChange={onClassChange}
       actionButton={{
-        label: 'Gerar Alunos',
+        label: 'Gerar 300 Novos Alunos',
         onClick: onGenerateStudents,
       }}
     />

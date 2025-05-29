@@ -1,4 +1,5 @@
 import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface FeedbackProps {
   type: 'success' | 'error' | 'info';
@@ -23,7 +24,7 @@ const Feedback: React.FC<FeedbackProps> = ({ type, message, onClose }) => {
   };
 
   return (
-    <div className={`fixed top-4 right-4 p-4 rounded-lg border shadow-lg z-50 transition-all duration-200
+    <div data-testid="feedback" className={`fixed top-4 right-4 p-4 rounded-lg border shadow-lg z-50 transition-all duration-200
       ${styles[type].light} dark:${styles[type].dark}`}>
       <div className="flex items-center">
         <span className="flex-grow">{message}</span>
@@ -33,7 +34,7 @@ const Feedback: React.FC<FeedbackProps> = ({ type, message, onClose }) => {
             className="ml-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
             aria-label="Fechar mensagem"
           >
-            ×
+            <CloseIcon className="h-5 w-5" />
           </button>
         )}
       </div>

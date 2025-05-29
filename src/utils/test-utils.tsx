@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { MemoryRouter } from 'react-router-dom';
 import { AppProvider } from '../context/AppContext';
-import { getTheme } from '../styles/theme';
+import { lightTheme } from '../theme';
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -23,17 +23,15 @@ Object.defineProperty(window, 'matchMedia', {
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <ThemeProvider theme={getTheme()}>
+      <ThemeProvider theme={lightTheme}>
         <AppProvider>{children}</AppProvider>
       </ThemeProvider>
     </MemoryRouter>
   );
 };
 
-const customRender = async (ui: React.ReactElement, options = {}) => {
-  const result = render(ui, { wrapper: AllTheProviders, ...options });
-  return result;
-};
+const customRender = (ui: React.ReactElement, options = {}) =>
+  render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything
 export * from '@testing-library/react';

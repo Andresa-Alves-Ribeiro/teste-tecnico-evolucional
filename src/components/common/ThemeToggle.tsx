@@ -12,6 +12,7 @@ const ThemeToggle: React.FC = () => {
     >
       {isDarkMode ? (
         <svg
+          data-testid="theme-icon"
           className="w-6 h-6 text-yellow-400"
           fill="none"
           stroke="currentColor"
@@ -26,6 +27,7 @@ const ThemeToggle: React.FC = () => {
         </svg>
       ) : (
         <svg
+          data-testid="theme-icon"
           className="w-6 h-6 text-gray-700 dark:text-gray-300"
           fill="none"
           stroke="currentColor"

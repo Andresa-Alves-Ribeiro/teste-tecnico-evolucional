@@ -1,44 +1,35 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Box, BoxProps, useTheme } from '@mui/material';
+import { motion, MotionStyle } from 'framer-motion';
+import { Box, BoxProps } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface HoverCardProps extends BoxProps {
-  children: React.ReactNode;
+  children: ReactNode;
   hoverScale?: number;
   hoverElevation?: number;
 }
 
-const HoverCard: React.FC<HoverCardProps> = ({
+const HoverCard = ({
   children,
-  hoverScale = 1.02,
-  hoverElevation = 8,
+  hoverScale = 1.05,
+  hoverElevation = 4,
   sx,
   ...props
-}) => {
-  const theme = useTheme();
-
-  const boxStyles = {
-    ...sx,
+}: HoverCardProps) => {
+  const boxStyles: MotionStyle = {
     width: '100%',
     height: '100%',
-    transition: 'all 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    transition: 'all 0.3s ease-in-out',
   };
 
   return (
     <motion.div
-      data-testid="motion-div"
       whileHover={{
         scale: hoverScale,
-        boxShadow: theme.shadows[hoverElevation],
-        transition: {
-          type: 'spring',
-          stiffness: 400,
-          damping: 10,
-        },
+        boxShadow: `0 ${hoverElevation}px ${hoverElevation * 2}px rgba(0, 0, 0, 0.1)`,
       }}
       style={boxStyles}
     >
-      <Box {...props}>
+      <Box sx={sx} {...props}>
         {children}
       </Box>
     </motion.div>

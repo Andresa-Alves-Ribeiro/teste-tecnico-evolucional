@@ -1,5 +1,16 @@
-import { ValidationRule, ValidationError, ValidationValue, ValidationContext } from '../types/common';
+import { ValidationValue, ValidationContext } from '../types/common/validation';
 import { VALIDATION_MESSAGES } from '../constants';
+
+export interface ValidationRule {
+  field: string;
+  validate: (value: ValidationValue, context?: ValidationContext) => boolean;
+  message: string;
+}
+
+export interface ValidationError {
+  field: string;
+  message: string;
+}
 
 export const createValidationRule = (
   field: string,
@@ -15,13 +26,13 @@ export const validateField = (
   value: ValidationValue,
   rules: ValidationRule[],
   context?: ValidationContext
-): ValidationError[] => {
-  return rules
-    .filter(rule => !rule.validate(value, context))
-    .map(rule => ({
-      field: rule.field,
-      message: rule.message,
-    }));
+): string | null => {
+  for (const rule of rules) {
+    if (!rule.validate(value, context)) {
+      return rule.message;
+    }
+  }
+  return null;
 };
 
 // Regras comuns de validação
@@ -29,29 +40,33 @@ export const commonRules = {
   required: (field: string, message?: string) =>
     createValidationRule(
       field,
-      (value) => value !== undefined && value !== null && value !== '',
-      message || VALIDATION_MESSAGES.required(field)
+      (value) => Boolean(value),
+      message || `${field} é obrigatório`
     ),
   
   minLength: (field: string, length: number, message?: string) =>
     createValidationRule(
       field,
-      (value) => value && String(value).length >= length,
-      message || VALIDATION_MESSAGES.minLength(field, length)
+      (value) => Boolean(value && String(value).length >= length),
+      message || `${field} deve ter no mínimo ${length} caracteres`
     ),
   
   maxLength: (field: string, length: number, message?: string) =>
     createValidationRule(
       field,
       (value) => !value || String(value).length <= length,
-      message || VALIDATION_MESSAGES.maxLength(field, length)
+      message || `${field} deve ter no máximo ${length} caracteres`
     ),
   
   email: (field: string, message?: string) =>
     createValidationRule(
       field,
-      (value) => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value)),
-      message || VALIDATION_MESSAGES.email
+      (value) => {
+        if (!value) return true;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(String(value));
+      },
+      message || 'Email inválido'
     ),
   
   number: (field: string, message?: string) =>
@@ -95,47 +110,84 @@ export const commonRules = {
       (value) => !value || /^\d{5}-\d{3}$/.test(String(value)),
       message || VALIDATION_MESSAGES.invalidCEP
     ),
+
+  pattern: (field: string, pattern: RegExp, message?: string) =>
+    createValidationRule(
+      field,
+      (value) => !value || pattern.test(String(value)),
+      message || `${field} está em formato inválido`
+    ),
+
+  match: (field: string, matchField: string, message?: string) =>
+    createValidationRule(
+      field,
+      (value, context) => {
+        if (!context?.formData) return true;
+        return value === context.formData[matchField];
+      },
+      message || `${field} não corresponde a ${matchField}`
+    ),
 };
 
 // Validação específica para estudantes
-export const validateStudent = (data: Record<string, ValidationValue>): ValidationError[] => {
-  const rules = [
-    commonRules.required('name', VALIDATION_MESSAGES.required('Nome')),
-    commonRules.minLength('name', 3, VALIDATION_MESSAGES.minLength('Nome', 3)),
-    commonRules.required('degreeId', VALIDATION_MESSAGES.required('Série')),
-    commonRules.required('classId', VALIDATION_MESSAGES.required('Classe')),
-  ];
+export const validateStudent = (data: Record<string, ValidationValue>): Record<string, string> => {
+  const errors: Record<string, string> = {};
 
-  return Object.entries(data).flatMap(([field, value]) =>
-    validateField(value, rules.filter(rule => rule.field === field), { value, field, formData: data })
-  );
+  const nameError = validateField(data.name, [
+    commonRules.required('Nome'),
+    commonRules.minLength('Nome', 3),
+    commonRules.maxLength('Nome', 100),
+  ]);
+
+  if (nameError) {
+    errors.name = nameError;
+  }
+
+  const emailError = validateField(data.email, [
+    commonRules.required('Email'),
+    commonRules.email('Email'),
+  ]);
+
+  if (emailError) {
+    errors.email = emailError;
+  }
+
+  return errors;
 };
 
 // Validação específica para professores
-export const validateTeacher = (data: Record<string, ValidationValue>): ValidationError[] => {
-  const rules = [
-    commonRules.required('name', VALIDATION_MESSAGES.required('Nome')),
-    commonRules.minLength('name', 3, VALIDATION_MESSAGES.minLength('Nome', 3)),
-    commonRules.email('email', VALIDATION_MESSAGES.email),
-    commonRules.required('subject', VALIDATION_MESSAGES.required('Disciplina')),
-  ];
+export const validateTeacher = (data: Record<string, ValidationValue>): Record<string, string> => {
+  const errors: Record<string, string> = {};
 
-  return Object.entries(data).flatMap(([field, value]) =>
-    validateField(value, rules.filter(rule => rule.field === field), { value, field, formData: data })
-  );
+  const nameError = validateField(data.name, [
+    commonRules.required('Nome'),
+    commonRules.minLength('Nome', 3),
+    commonRules.maxLength('Nome', 100),
+  ]);
+
+  if (nameError) {
+    errors.name = nameError;
+  }
+
+  const subjectError = validateField(data.subject, [
+    commonRules.required('Disciplina'),
+    commonRules.minLength('Disciplina', 3),
+    commonRules.maxLength('Disciplina', 50),
+  ]);
+
+  if (subjectError) {
+    errors.subject = subjectError;
+  }
+
+  return errors;
 };
 
 // Função de sanitização de input
-export const sanitizeInput = (input: string): string => {
-  if (!input) return '';
-  
-  return input
+export const sanitizeInput = (value: string): string => {
+  return value
     .trim()
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags
-    .replace(/[<>]/g, '') // Remove caracteres potencialmente perigosos
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;')
-    .replace(/alert/g, '&amp;alert'); // Escape alert keyword
+    .replace(/[<>]/g, '') // Remove < and > to prevent XSS
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove on* attributes
+    .replace(/data:/gi, ''); // Remove data: protocol
 }; 
