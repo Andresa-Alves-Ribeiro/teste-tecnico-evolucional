@@ -1,6 +1,6 @@
-<p align="center">
-# Sistema de Gerenciamento Escolar
-</p>
+<h1 align="center">
+Sistema de Gerenciamento Escolar
+</h1>
 
 <p align="center">
   <a href="#sobre">Sobre</a> •
@@ -23,10 +23,10 @@ Este projeto consiste em duas telas principais, cada uma com duas partes de func
 ## 📸 Capturas de Tela
 
 ### Modo Desktop
-![Tela desktop](/screenshots/desktop.png)
+![Captura de tela 2025-05-29 185422](https://github.com/user-attachments/assets/afd448a7-324d-4ae6-96d4-249154992263)
 
 ### Mobile
-![Tela Mobile](/screenshots/mobile.png)
+![Captura de tela 2025-05-29 185450](https://github.com/user-attachments/assets/755f39c6-2fee-488b-a24b-d3a4abe65017)
 
 ## Tela 1 - Gerenciamento de Alunos
 
