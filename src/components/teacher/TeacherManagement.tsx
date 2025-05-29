@@ -29,6 +29,12 @@ const TeacherManagement = () => {
         if (selectedClass) {
             filtered = filtered.filter(rel => rel.classId === selectedClass);
         }
+        // Sort relationships by teacher name alphabetically
+        filtered.sort((a, b) => {
+            const teacherNameA = getTeacherName(a.teacherId).toLowerCase();
+            const teacherNameB = getTeacherName(b.teacherId).toLowerCase();
+            return teacherNameA.localeCompare(teacherNameB);
+        });
         setFilteredRelationships(filtered);
     }, [selectedDegree, selectedClass]);
 
@@ -52,8 +58,16 @@ const TeacherManagement = () => {
         return classes.find(c => c.id === classId)?.name ?? '';
     };
 
-    const getStudentsByDegree = (degreeId: number) => {
-        return students.filter(student => student.degreeId === degreeId);
+    const getStudentsByDegree = (relationshipId: number) => {
+        // Encontra o relacionamento específico do professor que está sendo visualizado
+        const relationship = filteredRelationships.find(rel => rel.id === relationshipId);
+        if (!relationship) return [];
+
+        // Filtra os alunos que pertencem exatamente à mesma série e classe do relacionamento
+        return students.filter(student => 
+            student.degreeId === relationship.degreeId && 
+            student.classId === relationship.classId
+        );
     };
 
     const handleAddRelationship = () => {
@@ -289,7 +303,7 @@ const TeacherManagement = () => {
                         <Box sx={{ mt: 6 }}>
                             {getStudentsByDegree(showStudents).length > 0 ? (
                                 <DataTable
-                                    title={`Alunos da Série ${getDegreeName(showStudents)}`}
+                                    title={`Alunos da Série ${getDegreeName(filteredRelationships.find(rel => rel.id === showStudents)?.degreeId ?? 0)}`}
                                     items={getStudentsByDegree(showStudents)}
                                     columns={studentColumns}
                                 />

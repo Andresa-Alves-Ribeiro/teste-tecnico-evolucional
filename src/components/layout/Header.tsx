@@ -32,7 +32,7 @@ const Logo = () => {
       >
         <SchoolIcon sx={{ 
           fontSize: { xs: 20, sm: 24 }, 
-          color: theme.palette.mode === 'dark' ? theme.palette.primary.light : 'white' 
+          color: 'white'
         }} />
       </Avatar>
       <Typography
@@ -123,7 +123,6 @@ const NavigationLink = ({ path, label, isActive }: { path: string; label: string
       component={Link}
       to={path}
       sx={linkStyles}
-      role="link"
       aria-label={label}
     >
       {label}
@@ -283,10 +282,23 @@ const Header = () => {
                 color="inherit"
                 sx={{
                   ml: 1,
-                  backgroundColor: alpha(theme.palette.common.white, 0.1),
+                  backgroundColor: theme.palette.mode === 'dark' 
+                    ? alpha(theme.palette.primary.main, 0.1)
+                    : alpha(theme.palette.common.white, 0.1),
+                  border: `1px solid ${theme.palette.mode === 'dark'
+                    ? alpha(theme.palette.primary.light, 0.2)
+                    : alpha(theme.palette.common.white, 0.2)}`,
+                  color: theme.palette.mode === 'dark' 
+                    ? theme.palette.primary.light 
+                    : 'white',
                   '&:hover': {
-                    backgroundColor: alpha(theme.palette.common.white, 0.15),
+                    backgroundColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.main, 0.2)
+                      : alpha(theme.palette.common.white, 0.15),
                     transform: 'scale(1.05)',
+                    borderColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.primary.light, 0.4)
+                      : alpha(theme.palette.common.white, 0.4),
                   },
                   transition: 'all 0.2s ease',
                 }}

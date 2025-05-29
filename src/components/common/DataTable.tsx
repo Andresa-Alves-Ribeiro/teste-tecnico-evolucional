@@ -221,6 +221,7 @@ const DataTable: React.FC<DataTableProps> = ({
 }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isDarkMode = theme.palette.mode === 'dark';
 
     const renderTableHeader = () => (
         <TableRow
@@ -374,17 +375,24 @@ const DataTable: React.FC<DataTableProps> = ({
             elevation={0}
             sx={{
                 borderRadius: 3,
-                background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.95)}, ${alpha(theme.palette.background.paper, 0.98)})`,
-                backdropFilter: 'blur(10px)',
-                boxShadow: `0 4px 24px ${alpha(theme.palette.common.black, 0.06)}`,
-                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                background: isDarkMode
+                    ? 'linear-gradient(135deg, rgba(31, 41, 55, 0.95), rgba(17, 24, 39, 0.98))'
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.95))',
+                boxShadow: isDarkMode
+                    ? '0 4px 24px rgba(0, 0, 0, 0.3)'
+                    : '0 4px 24px rgba(0, 0, 0, 0.06)',
+                border: isDarkMode
+                    ? '1px solid rgba(255, 255, 255, 0.2)'
+                    : '1px solid rgba(0, 0, 0, 0.1)',
                 transition: 'all 0.3s ease-in-out',
                 position: 'relative',
                 overflow: 'hidden',
                 width: '100%',
                 '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: `0 8px 32px ${alpha(theme.palette.common.black, 0.08)}`,
+                    boxShadow: isDarkMode
+                        ? '0 8px 32px rgba(0, 0, 0, 0.4)'
+                        : '0 8px 32px rgba(0, 0, 0, 0.08)',
                 },
                 '&::before': {
                     content: '""',
@@ -409,7 +417,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     boxSizing: 'border-box'
                 }}
             >
-                <SchoolIcon sx={{ color: theme.palette.primary.main, fontSize: { xs: 24, sm: 28 } }} />
+                <SchoolIcon sx={{ color: 'white', fontSize: { xs: 24, sm: 28 } }} />
                 <Typography
                     variant="h6"
                     sx={{

@@ -9,15 +9,32 @@ export function useDarkMode() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      document.documentElement.classList.add('dark');
-      dispatch({ type: 'TOGGLE_DARK_MODE' });
+    // Se não houver tema salvo, usa a preferência do sistema
+    if (!savedTheme) {
+      if (prefersDark) {
+        document.documentElement.classList.add('dark');
+        dispatch({ type: 'TOGGLE_DARK_MODE' });
+      }
+      return;
     }
-  }, [dispatch]);
+
+    // Se houver tema salvo, aplica ele
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+      if (!state.isDarkMode) {
+        dispatch({ type: 'TOGGLE_DARK_MODE' });
+      }
+    } else {
+      document.documentElement.classList.remove('dark');
+      if (state.isDarkMode) {
+        dispatch({ type: 'TOGGLE_DARK_MODE' });
+      }
+    }
+  }, [dispatch, state.isDarkMode]);
 
   const toggleDarkMode = () => {
     const newMode = !state.isDarkMode;
-    dispatch({ type: 'TOGGLE_DARK_MODE' });
+    dispatch({ type: 'SET_DARK_MODE', payload: newMode });
     
     if (newMode) {
       document.documentElement.classList.add('dark');

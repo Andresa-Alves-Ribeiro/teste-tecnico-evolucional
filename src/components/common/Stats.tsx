@@ -17,15 +17,15 @@ interface StatsProps {
 
 const Stats: React.FC<StatsProps> = ({ items, className = '' }) => {
   return (
-    <div className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-${items.length} ${className}`}>
+    <ul className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-${items.length} ${className}`}>
       {items.map((item, index) => (
-        <div
+        <li
           key={index}
           className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 px-4 py-5 shadow transition-all"
         >
           <dt>
             {item.icon && (
-              <div className="absolute rounded-md bg-primary-light/10 dark:bg-primary-dark/20 p-3">
+              <div data-testid="icon-container" className="absolute rounded-md bg-primary-light/10 dark:bg-primary-dark/20 p-3">
                 {item.icon}
               </div>
             )}
@@ -50,9 +50,9 @@ const Stats: React.FC<StatsProps> = ({ items, className = '' }) => {
               </p>
             )}
           </dd>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

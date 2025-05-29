@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
 import { Student } from '../types/Student';
 import { Teacher } from '../types/Teacher';
 
@@ -19,7 +19,22 @@ type AppAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_SELECTED_STUDENT'; payload: Student | null }
   | { type: 'SET_SELECTED_TEACHER'; payload: Teacher | null }
-  | { type: 'TOGGLE_DARK_MODE' };
+  | { type: 'TOGGLE_DARK_MODE' }
+  | { type: 'SET_DARK_MODE'; payload: boolean };
+
+const getInitialTheme = () => {
+  if (typeof window !== 'undefined') {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      return true;
+    }
+    if (savedTheme === 'light') {
+      return false;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  return false;
+};
 
 const initialState: AppState = {
   feedback: {
@@ -29,7 +44,7 @@ const initialState: AppState = {
   loading: false,
   selectedStudent: null,
   selectedTeacher: null,
-  isDarkMode: false,
+  isDarkMode: getInitialTheme(),
 };
 
 const AppContext = createContext<{
@@ -75,6 +90,11 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         ...state,
         isDarkMode: !state.isDarkMode,
       };
+    case 'SET_DARK_MODE':
+      return {
+        ...state,
+        isDarkMode: action.payload,
+      };
     default:
       return state;
   }
@@ -82,6 +102,15 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
+  useEffect(() => {
+    // Aplica a classe dark no elemento html baseado no estado inicial
+    if (state.isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [state.isDarkMode]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

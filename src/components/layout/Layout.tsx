@@ -15,6 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <SmoothScroll>
       <Box
+        data-testid="layout-container"
         sx={{
           display: 'flex',
           flexDirection: 'column',

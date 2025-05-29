@@ -1,4 +1,4 @@
-import { createTheme, alpha } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 // Cores principais
 const primaryColors = {
@@ -39,7 +39,7 @@ const textColors = {
   },
   secondary: {
     light: '#4b5563',
-    dark: '#9ca3af',
+    dark: '#d1d5db',
   },
 };
 
@@ -80,6 +80,8 @@ const commonStyles = {
     small: '4px',
     medium: '8px',
     large: '12px',
+    xl: '16px',
+    xxl: '24px',
   },
   spacing: {
     xs: '4px',
@@ -88,12 +90,61 @@ const commonStyles = {
     lg: '24px',
     xl: '32px',
   },
-  shadows: {
-    small: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    medium: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    large: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-  },
 };
+
+const shadows: [
+  "none",
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string
+] = [
+  'none',
+  '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+];
 
 // Criar tema claro
 export const lightTheme = createTheme({
@@ -105,9 +156,6 @@ export const lightTheme = createTheme({
     secondary: {
       main: secondaryColors.light,
     },
-    success: {
-      main: statusColors.success.light,
-    },
     error: {
       main: statusColors.error.light,
     },
@@ -116,6 +164,9 @@ export const lightTheme = createTheme({
     },
     info: {
       main: statusColors.info.light,
+    },
+    success: {
+      main: statusColors.success.light,
     },
     text: {
       primary: textColors.primary.light,
@@ -126,20 +177,38 @@ export const lightTheme = createTheme({
       paper: backgroundColors.paper.light,
     },
   },
-  transitions: {
-    duration: transitions.duration,
-    easing: transitions.easing,
+  typography: {
+    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 600,
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 600,
+    },
+    h3: {
+      fontSize: '1.75rem',
+      fontWeight: 600,
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 600,
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 600,
+    },
   },
   shape: {
     borderRadius: parseInt(commonStyles.borderRadius.medium),
   },
   spacing: (factor: number) => `${factor * 8}px`,
-  shadows: [
-    'none',
-    commonStyles.shadows.small,
-    commonStyles.shadows.medium,
-    commonStyles.shadows.large,
-  ],
+  shadows,
 });
 
 // Criar tema escuro
@@ -152,9 +221,6 @@ export const darkTheme = createTheme({
     secondary: {
       main: secondaryColors.dark,
     },
-    success: {
-      main: statusColors.success.dark,
-    },
     error: {
       main: statusColors.error.dark,
     },
@@ -163,6 +229,9 @@ export const darkTheme = createTheme({
     },
     info: {
       main: statusColors.info.dark,
+    },
+    success: {
+      main: statusColors.success.dark,
     },
     text: {
       primary: textColors.primary.dark,
@@ -173,20 +242,38 @@ export const darkTheme = createTheme({
       paper: backgroundColors.paper.dark,
     },
   },
-  transitions: {
-    duration: transitions.duration,
-    easing: transitions.easing,
+  typography: {
+    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 600,
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 600,
+    },
+    h3: {
+      fontSize: '1.75rem',
+      fontWeight: 600,
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 600,
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 600,
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 600,
+    },
   },
   shape: {
     borderRadius: parseInt(commonStyles.borderRadius.medium),
   },
   spacing: (factor: number) => `${factor * 8}px`,
-  shadows: [
-    'none',
-    commonStyles.shadows.small,
-    commonStyles.shadows.medium,
-    commonStyles.shadows.large,
-  ],
+  shadows,
 });
 
 // Exportar estilos comuns para uso em componentes

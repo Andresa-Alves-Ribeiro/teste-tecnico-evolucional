@@ -19,7 +19,7 @@ const TrendStat: React.FC<TrendStatProps> = ({
   className = '',
 }) => {
   return (
-    <div
+    <article
       className={`rounded-lg bg-white dark:bg-gray-900 p-6 shadow-md transition-all ${className}`}
     >
       <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">
@@ -43,7 +43,7 @@ const TrendStat: React.FC<TrendStatProps> = ({
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
         {period}
       </p>
-    </div>
+    </article>
   );
 };
 

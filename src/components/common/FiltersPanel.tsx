@@ -54,7 +54,7 @@ const FiltersPanel = ({
     borderRadius: 3,
     background: isDarkMode
       ? 'linear-gradient(135deg, rgba(31, 41, 55, 0.95), rgba(17, 24, 39, 0.98))'
-      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98))',
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(245, 247, 250, 0.95))',
     boxShadow: isDarkMode
       ? '0 4px 24px rgba(0, 0, 0, 0.3)'
       : '0 4px 24px rgba(0, 0, 0, 0.06)',
@@ -139,7 +139,7 @@ const FiltersPanel = ({
               },
             },
             '& .MuiInputLabel-root': {
-              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
+              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.primary,
               fontWeight: 500,
               '&.Mui-focused': {
                 color: theme.palette.primary.main,
@@ -152,7 +152,7 @@ const FiltersPanel = ({
             <Stack direction="row" spacing={1} alignItems="center">
               <SchoolIcon sx={{ 
                 fontSize: 20,
-                color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
+                color: 'white'
               }} />
               <span>Série</span>
             </Stack>
@@ -165,7 +165,7 @@ const FiltersPanel = ({
               <Stack direction="row" spacing={1} alignItems="center">
                 <SchoolIcon sx={{ 
                   fontSize: 20,
-                  color: isDarkMode ? theme.palette.primary.light : theme.palette.primary.main
+                  color: 'white'
                 }} />
                 <span>Série</span>
               </Stack>
@@ -231,7 +231,7 @@ const FiltersPanel = ({
               },
             },
             '& .MuiInputLabel-root': {
-              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.secondary,
+              color: isDarkMode ? theme.palette.text.secondary : theme.palette.text.primary,
               fontWeight: 500,
               '&.Mui-focused': {
                 color: theme.palette.primary.main,

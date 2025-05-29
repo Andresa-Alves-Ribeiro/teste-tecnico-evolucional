@@ -15,7 +15,9 @@ export interface Student {
     name: string;
     degreeId: number;
     classId: number;
-    [key: string]: TableValue;
+    ra?: number;
+    status?: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+    [key: string]: any;
 }
 
 export interface Degree {

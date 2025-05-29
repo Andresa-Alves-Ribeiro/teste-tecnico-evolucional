@@ -30,6 +30,7 @@ const StudentFiltersAndChart = ({
 
   return (
     <Box
+      data-testid="student-filters-chart-container"
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -38,6 +39,7 @@ const StudentFiltersAndChart = ({
       }}
     >
       <Paper
+        data-testid="student-filters-chart-paper"
         elevation={0}
         sx={{
           p: { xs: 2, sm: 3 },

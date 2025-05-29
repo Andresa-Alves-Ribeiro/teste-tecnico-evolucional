@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, Typography, useTheme } from '@mui/material';
-import { styles } from '../../theme';
 import { alpha } from '@mui/material/styles';
 
 interface PaginationProps {
@@ -79,7 +78,6 @@ const Pagination: React.FC<PaginationProps> = ({
 
       const hasLeftSpill = startPage > 2;
       const hasRightSpill = totalPages - endPage > 1;
-      const spillOffset = totalNumbers - (pages.length + 1);
 
       return [
         showFirstLast && 1,
@@ -92,6 +90,8 @@ const Pagination: React.FC<PaginationProps> = ({
 
     return range(1, totalPages);
   };
+
+  const pageNumbers = generatePaginationRange();
 
   return (
     <Box
@@ -110,11 +110,11 @@ const Pagination: React.FC<PaginationProps> = ({
         Anterior
       </PaginationButton>
 
-      {generatePaginationRange().map((page, index) => {
+      {pageNumbers.map((page) => {
         if (page === '...') {
           return (
             <Typography
-              key={`ellipsis-${index}`}
+              key={`ellipsis-${pageNumbers.indexOf(page)}`}
               sx={{
                 color: theme.palette.text.secondary,
                 px: 1,
@@ -124,10 +124,9 @@ const Pagination: React.FC<PaginationProps> = ({
             </Typography>
           );
         }
-
         return (
           <PaginationButton
-            key={page}
+            key={String(page)}
             onClick={() => onPageChange(page as number)}
             disabled={currentPage === page}
             isCurrentPage={currentPage === page}

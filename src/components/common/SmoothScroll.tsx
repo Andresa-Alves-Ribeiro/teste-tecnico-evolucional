@@ -21,7 +21,7 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({
       if (anchor) {
         e.preventDefault();
         const targetId = anchor.getAttribute('href')?.substring(1);
-        const targetElement = document.getElementById(targetId || '');
+        const targetElement = document.getElementById(targetId ?? '');
         
         if (targetElement) {
           targetElement.scrollIntoView({

@@ -14,8 +14,7 @@ const StatCard: React.FC<StatCardProps> = ({
   className = '',
 }) => {
   return (
-    <div
-      role="article"
+    <article
       className={`rounded-lg bg-white dark:bg-gray-800 p-6 shadow-md transition-all ${className}`}
     >
       <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -31,7 +30,7 @@ const StatCard: React.FC<StatCardProps> = ({
           {description}
         </p>
       )}
-    </div>
+    </article>
   );
 };
 

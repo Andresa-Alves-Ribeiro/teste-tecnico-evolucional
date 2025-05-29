@@ -1,6 +1,5 @@
 import React from 'react';
 import { Snackbar, Alert, AlertColor, Slide, SlideProps } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
 
 interface ActionFeedbackProps {
   open: boolean;
